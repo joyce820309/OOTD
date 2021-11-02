@@ -20,6 +20,10 @@ button:active {
   transform: scale(0.95);
 }
 
+button:focus {
+  transform: scale(1.08);
+}
+
 input {
   border: 0.3px solid #8a6f4749;
 }

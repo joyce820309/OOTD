@@ -1,7 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect } from "react";
+// import ReactDOM from "react-dom";
 import styled from "styled-components";
 import "../CSS/SignIn.css";
+import WebFont from "webfontloader";
 
 const OverlayContainer = styled.div`
   position: absolute;
@@ -48,32 +49,50 @@ const P = styled.p`
 //   border-color: #ffffff;
 // `;
 
+const BackgroundRight = styled.div`
+  position: absolute;
+  width: 78%;
+  height: 45%;
+  bottom: 124px;
+  right: 0;
+  background-color: #bff5e438;
+  z-index: -1;
+`;
+
 const OverLay = ({ onClick }) => {
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: ["Droid Sans", "Chilanka"],
+      },
+    });
+  }, []);
   return (
-    <div className="overlay-container">
+    <div className="overlay-container" style={{ fontFamily: "Chilanka" }}>
       <div className="overlay">
         <div className="overlay-panel overlay-left">
-          <h1>歡迎回來!</h1>
-          <p>等不及更衣了嗎？</p>
+          <h1>Welcome back!</h1>
+          <p>Can't wait to dress？</p>
           <button
             onClick={onClick}
             className="btn-overlay"
             id="signIn"
             style={{ color: "#ffffffa8" }}
           >
-            現在登入
+            Login now
           </button>
         </div>
         <div className="overlay-panel overlay-right">
-          <h1>Ｈi, 很高興認識你!</h1>
-          <p>還沒有帳號嗎？</p>
+          <BackgroundRight />
+          <h1>Hi, there!</h1>
+          <p>Don't have an account?</p>
           <button
             onClick={onClick}
             className="btn-overlay"
             id="signUp"
             style={{ color: "#ffffff" }}
           >
-            現在加入
+            Join Now
           </button>
         </div>
       </div>

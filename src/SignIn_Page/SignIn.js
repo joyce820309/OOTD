@@ -77,22 +77,20 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // library.add(fab, faCheckSquare, faCoffee);
-
   const onSubmit = () => {
     console.log("進來囉");
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        history.push("./FittingRoom");
+        history.push("/FittingRoom");
       });
   };
 
   const handleSocialMedia = async (provider) => {
     const res = await Auth(provider);
     console.log(res);
-    await history.push("./FittingRoom");
+    history.push("/FittingRoom");
   };
 
   return (
@@ -102,6 +100,7 @@ const SignIn = () => {
         <SocialContainer>
           <SocialA href="#">
             <FontAwesomeIcon
+              style={{ color: "#70604c" }}
               icon={faFacebook}
               onClick={() => handleSocialMedia(facebookProvider)}
             />
@@ -109,6 +108,9 @@ const SignIn = () => {
 
           <SocialA href="#">
             <FontAwesomeIcon
+              style={{ color: "#70604c" }}
+              // onMouseOver='this.style.color="#ed8f03"'
+              // onMouseOut='this.style.color="#70604c"'
               icon={faGoogle}
               onClick={() => handleSocialMedia(googleProvider)}
             />
