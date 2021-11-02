@@ -86,8 +86,8 @@ const SignUp = () => {
   const handleSocialMedia = (provider) => {
     const res = Auth(provider);
     console.log(res);
-    setUserInfo();
-    history.push("./FittingRoom");
+    // setUserInfo();
+    history.push("/FittingRoom");
   };
 
   // const checkFormat = () => {
@@ -102,9 +102,9 @@ const SignUp = () => {
   //   }
   // };
 
-  const onSubmit = () => {
+  const onSubmit = (e) => {
     console.log("進來囉");
-
+    e.preventDefault();
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -112,7 +112,7 @@ const SignUp = () => {
         setUserInfo();
       })
       .then(() => {
-        history.push("./FittingRoom");
+        history.push("/FittingRoom");
       });
   };
 
@@ -133,6 +133,7 @@ const SignUp = () => {
           <SocialA href="#">
             <FontAwesomeIcon
               icon={faFacebook}
+              style={{ color: "#70604c" }}
               onClick={() => handleSocialMedia(facebookProvider)}
             />
           </SocialA>
@@ -140,6 +141,7 @@ const SignUp = () => {
           <SocialA href="#">
             <FontAwesomeIcon
               icon={faGoogle}
+              style={{ color: "#70604c" }}
               onClick={() => handleSocialMedia(googleProvider)}
             />
           </SocialA>
@@ -169,7 +171,13 @@ const SignUp = () => {
             setPassword(e.target.value);
           }}
         />
-        <button onClick={onSubmit}>Sign Up</button>
+        <button
+          onClick={(e) => {
+            onSubmit(e);
+          }}
+        >
+          Sign Up
+        </button>
       </form>
     </div>
   );

@@ -124,14 +124,9 @@ form {
 }
 
 .overlay {
-  /* opacity: 0.3; */
-  background: #968064;
-  background: -webkit-linear-gradient(
-    to right,
-    #968064,
-    rgba(255, 183, 94, 0.575)
-  );
-  background: linear-gradient(to right, #968064, rgba(255, 183, 94, 0.575));
+  /* background: #dba6ca; */
+  background: -webkit-linear-gradient(to right, #eeb199, #f5d1c3);
+  background: linear-gradient(to right, #eeb199, #f5d1c3);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;

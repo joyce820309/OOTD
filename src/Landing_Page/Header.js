@@ -5,13 +5,43 @@ import logo from "../img/OOTDLogo.png";
 
 const HeaderDiv = styled.div`
   display: flex;
-  /* font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;  */
-  background: #fff;
+  justify-content: center;
   font-weight: 400;
   box-shadow: 0 1px 8px 0 rgb(34 36 38 / 18%);
   min-height: 80px;
-  background: #e4a747bd;
+  background: #f7d093;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
+
+const MobileHeader = styled.div`
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 400;
+    box-shadow: 0 1px 8px 0 rgb(34 36 38 / 18%);
+    min-height: 50px;
+    background: #efbf73;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99;
+    font-weight: 400;
+    padding-left: 30px;
+    color: #815e29;
+    cursor: pointer;
+  }
+`;
+
+const MobileList = styled.div;
 
 const IndexDiv = styled.div`
   display: flex;
@@ -73,33 +103,63 @@ const IndexLink = styled(Link)`
 `;
 
 const Header = () => {
+  // const SwitchList = (e) => {
+  //   if (MobileList.style.display === "none") {
+  //     MobileList.style.display = "block";
+  //     MobileHeader.textContent = "X";
+  //   } else {
+  //     MobileList.style.display = "none";
+  //     MobileHeader.textContent = "☰";
+  //   }
+  // };
+
   return (
-    <HeaderDiv>
-      <IndexDiv>
-        <IndexLink to="/">
-          <Logo
-            src={logo}
-            alt="logo"
-            style={{ height: "35px", width: "125px" }}
-          />
-        </IndexLink>
-      </IndexDiv>
-      <NavbarDiv>
-        <NavLink to="/FittingRoom">更衣室</NavLink>
-      </NavbarDiv>
-      <NavbarDiv>
-        <NavLink to="/Diary">穿搭日記</NavLink>
-      </NavbarDiv>
-      <NavbarDiv>
-        <NavLink to="/FindNewDress">幫衣服找新家</NavLink>
-      </NavbarDiv>
-      <NavbarDiv>
-        <NavLink to="/Personal">我の檔案</NavLink>
-      </NavbarDiv>
-      {/* <SignUpDiv>
-        <NavLink to="/SignUp">登入</NavLink>
-      </SignUpDiv> */}
-    </HeaderDiv>
+    <div>
+      <HeaderDiv>
+        <NavbarDiv>
+          <NavLink to="/FittingRoom">更衣室</NavLink>
+        </NavbarDiv>
+        <NavbarDiv>
+          <NavLink to="/Diary">穿搭日記</NavLink>
+        </NavbarDiv>
+        <IndexDiv>
+          <IndexLink to="/">
+            <Logo
+              src={logo}
+              alt="logo"
+              style={{ height: "35px", width: "125px" }}
+            />
+          </IndexLink>
+        </IndexDiv>
+        <NavbarDiv>
+          <NavLink to="/FindNewDress">幫衣服找新家</NavLink>
+        </NavbarDiv>
+        <NavbarDiv>
+          <NavLink to="/Personal">我の檔案</NavLink>
+        </NavbarDiv>
+      </HeaderDiv>
+      <MobileHeader
+      // onClick={(e) => {
+      //   SwitchList(e.traget.value);
+      // }}
+      >
+        ☰
+      </MobileHeader>
+      {/* <MobileList>
+        <NavbarDiv>
+          <NavLink to="/FittingRoom">更衣室</NavLink>
+        </NavbarDiv>
+        <NavbarDiv>
+          <NavLink to="/Diary">穿搭日記</NavLink>
+        </NavbarDiv>
+        <NavbarDiv>
+          <NavLink to="/FindNewDress">幫衣服找新家</NavLink>
+        </NavbarDiv>
+        <NavbarDiv>
+          <NavLink to="/Personal">我の檔案</NavLink>
+        </NavbarDiv>
+      </MobileList> */}
+    </div>
   );
 };
 

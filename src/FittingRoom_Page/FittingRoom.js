@@ -6,39 +6,31 @@ import { fabric } from "fabric";
 import "firebase/firestore";
 import "firebase/storage";
 import firebase from "../utils/firebase";
-// import { BiCloset } from "@react-icons/all-files/fa/BiCloset";
 import { useHistory } from "react-router-dom";
-import Tshirt from "../img/Tshirt.png";
 import Popup from "reactjs-popup";
+import { faCentercode } from "@fortawesome/free-brands-svg-icons";
 let movingImage;
 
 let filePath;
-const item = firebase
-  .firestore()
-  .collection("users")
-  .doc("joy")
-  .collection("items")
-  .doc();
 
 const ButtonBox = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 115px;
 `;
 
 const CanvasBox = styled.div`
-  margin-top: 50px;
   display: flex;
   background-color: #f3d19e57;
 `;
 
 const ClosetBox = styled.div`
-  margin-top: 30px;
+  margin: 30px auto;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
   background-color: white;
-  box-shadow: 10px 2px 21px -2px rgba(182, 163, 163, 0.51);
+  box-shadow: 0px 2px 21px -2px rgba(182, 163, 163, 0.51);
   min-height: 700px;
   width: 800px;
 `;
@@ -81,7 +73,6 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: rgb(255, 255, 255);
-    opacity: 0.5;
     width: 700px;
     display: flex;
     height: 550px;
@@ -96,95 +87,136 @@ const Div = styled.div`
   margin-bottom: 20px;
 `;
 
+const ImgDiv = styled.div`
+  height: 120px;
+  width: 120px;
+  margin: 30px;
+`;
+
 const FittingRoom = () => {
   const history = useHistory();
+  const [itemSize, setItemSize] = useState("");
   const [canvas, setCanvas] = useState({});
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
   const [option, setOption] = useState("");
   const [itemName, setItemName] = useState("");
   const [date, setDate] = useState("");
   const [imgFile, setImgFile] = useState("");
   const [imgURL, setImgURL] = useState("");
   const [files, setFiles] = useState({});
-  const [items, setItems] = useState([]);
+  const [renderItems, setRenderItems] = useState([]);
 
   useEffect(() => {
     setCanvas(initCanvas());
   }, []);
 
   useEffect(() => {
+    const modified = { drop: dropImg };
     if (Object.keys(canvas).length) {
-      canvas.on("drop", dropImg); //TEST!!
+      canvas.on(modified);
     }
+
+    return () => {
+      if (Object.keys(canvas).length) {
+        canvas.off(modified); //每次都要清掉才不會memory leak
+      }
+    };
   }, [canvas]);
 
   useEffect(() => {
     // const id = firebase.firestore().collection("users").doc().id;
-    item.get().then((doc) => {
-      setItems("imgURL");
-    });
-  }, []);
-
-  // 透過 FileReader 將來讀取本地的圖片
-  const getFileInfo = (e, imgFile) => {
-    console.log(e, imgFile);
-    // const fileReader = new FileReader(); //upload to storge
-    filePath = firebase.storage().ref("itemImages/" + item.id); //傳入filebase的路徑位置
-    const file = imgFile.target.files[0];
-    // setFiles(imgFile.target.files[0]);
-    filePath.put(file, { contentType: file.type }).then(() => {
-      filePath.getDownloadURL().then((imageUrl) => {
-        setImgURL(imageUrl);
-      });
-    });
-  };
-
-  const sumbitItem = () => {
-    const YYYY = date.slice(0, 4);
-    const MM = date.slice(5, 7);
-    const DD = date.slice(8, 10);
-
-    console.log(imgsetRef.current);
     firebase
       .firestore()
       .collection("users")
-      .doc("joy") //user ID
+      .doc("joy")
       .collection("items")
-      .doc(item.id) //item ID
-      .set({
-        itemID: item.id,
-        itemExpense: price,
-        itemName: itemName,
-        YYYY: YYYY,
-        MM: MM,
-        DD: DD,
-        itemImg: imgURL,
-        itemTag: option,
+      .onSnapshot((snapshot) => {
+        let arr = [];
+        snapshot.forEach((doc) => {
+          arr.push(doc.data().itemImg);
+        });
+        setRenderItems(arr);
+        // .then((snapshot) => {
+        //   let arr = [];
+        //   snapshot.forEach((doc) => {
+        //     arr.push(doc.data().itemImg);
+        //   });
+        //   setRenderItems(arr);
       });
-    console.log("finish set", filePath);
-    const newFileReader = new FileReader();
-    // newFileReader.readAsDataURL(files);
-    // newFileReader.onload = () => {
-    console.log(newFileReader.readyState);
-    // const dataURL = e.target.result;
-    const img = document.createElement("img");
-    const imgBox = document.createElement("div");
+  }, []);
 
-    img.classList.add("img");
-    img.draggable = true;
-    // img.src = dataURL; //storage URL
-    img.src = imgURL;
-    console.log(img.src);
-    img.click = saveImg;
-    img.style.width = "90%";
-    // img.style.height = "150px";
-    img.style.margin = "15px";
-    imgBox.style.overflow = "hidden";
-    imgBox.style.width = "150px";
-    // imgsetRef.current.appendChild(img);
-    imgBox.appendChild(img);
-    imgset.appendChild(imgBox);
-    // };
+  const summitItem = () => {
+    const YYYY = date.slice(0, 4);
+    const MM = date.slice(5, 7);
+    const DD = date.slice(8, 10);
+    const item = firebase
+      .firestore()
+      .collection("users")
+      .doc("joy")
+      .collection("items")
+      .doc();
+
+    // 透過 FileReader 將來讀取本地的圖片
+    filePath = firebase.storage().ref("itemImages/" + item.id); //傳入filebase的路徑位置
+    const file = imgFile.target.files[0];
+    filePath.put(file, { contentType: file.type }).then(() => {
+      filePath.getDownloadURL().then((imageUrl) => {
+        setImgURL(imageUrl);
+
+        this.draggable = true;
+        this.click = saveImg;
+
+        item.set({
+          // itemID: item.id,
+          itemExpense: price,
+          itemName: itemName,
+          YYYY: YYYY,
+          MM: MM,
+          DD: DD,
+          itemImg: imageUrl,
+          itemTag: option,
+          itemSize: itemSize,
+        });
+      });
+    });
+
+    // getFileInfo(imgFile);
+
+    console.log(imgsetRef.current);
+    // firebase
+    //   .firestore()
+    //   .collection("users")
+    //   .doc("joy") //user ID
+    //   .collection("items")
+    //   .doc(item.id) //item ID
+    //   .set({
+    //     itemID: item.id,
+    //     itemExpense: price,
+    //     itemName: itemName,
+    //     YYYY: YYYY,
+    //     MM: MM,
+    //     DD: DD,
+    //     itemImg: imgURL,
+    //     itemTag: option,
+    //     itemSize: itemSize,
+    //   });
+    const newFileReader = new FileReader();
+    console.log(newFileReader.readyState);
+    // const img = document.createElement("img");
+    // const imgBox = document.createElement("div");
+
+    // img.classList.add("img");
+    // img.draggable = true;
+    // img.click = saveImg;
+
+    // img.src = imgURL;
+    // console.log(img.src);
+    // img.style.widin = "15px";
+    // imgBox.style.overflow = "hidden";
+    // imgBox.style.wth = "90%";
+    // img.style.margidth = "150px";
+    // imgBox.appendChild(img);
+    // imgset.appendChild(imgBox);
   };
 
   const initCanvas = () =>
@@ -195,10 +227,10 @@ const FittingRoom = () => {
 
   // const addImg = (e, url, canvi) => {
   //   e.preventDefault();
-  //   new fabric.Image.fromURL(url, (img) => {
+  // new fabric.Image.fromURL(url, (img) => {
   //     img.scale(0.5);
-  //     canvi.add(img);
-  //     canvi.renderAll();
+  // canvi.add(img);
+  // canvi.renderAll();
   //     setImgURL("");
   //   });
   // };
@@ -220,9 +252,6 @@ const FittingRoom = () => {
     offsetX: 0,
     offsetY: 0,
   };
-  // function uploadFile(e) {
-  //   file.click();
-  // }
 
   // 在圖片發生 mousedown 事件時，將圖片儲存起來，並且記錄滑鼠點擊圖片的位置
   const saveImg = (e) => {
@@ -269,21 +298,41 @@ const FittingRoom = () => {
           {(close) => (
             <Backdrop>
               <ItemForm>
-                <Div>
-                  <Span>類別：</Span>
+                <div style={{ display: "flex" }}>
+                  <Div>
+                    <Span>類別：</Span>
 
-                  <select
-                    value={option}
-                    onChange={(e) => setOption(e.target.value)}
-                  >
-                    <option value="selectTag">選一個</option>
-                    <option value="clothes">衣服</option>
-                    <option value="pants">褲子</option>
-                    <option value="shoses">鞋子</option>
-                    <option value="hats">帽子</option>
-                    <option value="accessaries">配件</option>
-                  </select>
-                </Div>
+                    <select
+                      value={option}
+                      onChange={(e) => setOption(e.target.value)}
+                    >
+                      <option value="selectTag">選一個</option>
+                      <option value="clothes">衣服</option>
+                      <option value="pants">褲子</option>
+                      <option value="shoses">鞋子</option>
+                      <option value="hats">帽子</option>
+                      <option value="accessaries">配件</option>
+                    </select>
+                  </Div>
+
+                  <Div>
+                    <Span>尺寸：</Span>
+
+                    <select
+                      value={itemSize}
+                      onChange={(e) => setItemSize(e.target.value)}
+                    >
+                      <option value="selectTag">選一個</option>
+                      <option value="XXS">XXS</option>
+                      <option value="XS">XS</option>
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L">L</option>
+                      <option value="XL">XL</option>
+                      <option value="XXL">XXL</option>
+                    </select>
+                  </Div>
+                </div>
                 <Div>
                   <Span>服裝名稱：</Span>
                   <input
@@ -295,9 +344,12 @@ const FittingRoom = () => {
                 <Div>
                   <Span>購買金額：</Span>
                   <input
-                    type="text"
+                    type="number"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={(e) => {
+                      setPrice(Number(e.target.value));
+                      console.log(typeof Number(e.target.value));
+                    }}
                   />
                 </Div>
                 <Div>
@@ -309,20 +361,21 @@ const FittingRoom = () => {
                   />
                 </Div>
                 <Div>
-                  <button
-                    id="imageUploader"
-                    onClick={(e) => getFileInfo(e, imgFile)}
-                  >
-                    上傳
-                  </button>
                   <input
                     type="file"
                     id="file"
                     onChange={(e) => setImgFile(e)}
+                    placeholder="選擇一件"
                   />
+                  {/* <button
+                    id="imageUploader"
+                    onClick={(e) => getFileInfo(e, imgFile)}
+                  >
+                    確認上傳圖片
+                  </button> */}
                 </Div>
                 <Div>
-                  <button type="submit" onClick={(e) => sumbitItem(e)}>
+                  <button type="submit" onClick={(e) => summitItem(e)}>
                     送出
                   </button>
                 </Div>
@@ -344,42 +397,34 @@ const FittingRoom = () => {
                 flexWrap: "wrap",
               }}
               id="imgset"
-              // ref={imgsetRef}
               onMouseDown={(e) => saveImg(e)}
             >
-              <img
-                id="defaultImg"
-                src={Tshirt}
-                alt="衣服"
-                style={{
-                  height: "120px",
-                  width: "120px",
-                  margin: "30px",
-                }}
-              />
+              {renderItems.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt="clothes"
+                  style={{ maxHeight: "160px", margin: "20px" }}
+                />
+              ))}
             </div>
-
-            {/* {items.map((item) => {
-              return (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                  }}
-                  id="imgset"
-                  // ref={imgsetRef}
-                  onMouseDown={(e) => saveImg(e)}
-                >
-                  <img />
-                </div>
-              );
-            })} */}
           </ImgsetBox>
         </ClosetBox>
       </CanvasBox>
     </div>
   );
 };
+
+{
+  /* <ImgDiv
+  key={index}
+  style={{
+    backgroundImage: `url(${url})`,
+    backgroundPosition: "center",
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+  }}
+/>  */
+}
 
 export default FittingRoom;
