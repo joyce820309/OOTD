@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import logo from "../img/OOTDLogo.png";
+import "firebase/auth";
+import firebase from "../utils/firebase";
 
 const HeaderDiv = styled.div`
   display: flex;
@@ -103,6 +105,15 @@ const IndexLink = styled(Link)`
 `;
 
 const Header = () => {
+  const [isUser, setIsUser] = useState(null);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      setIsUser(user);
+      // uEmail = firebase.auth().currentUser.email;
+    });
+  }, []);
+
   // const SwitchList = (e) => {
   //   if (MobileList.style.display === "none") {
   //     MobileList.style.display = "block";
@@ -115,7 +126,63 @@ const Header = () => {
 
   return (
     <div>
-      <HeaderDiv>
+      {isUser ? (
+        <>
+          <HeaderDiv>
+            <NavbarDiv>
+              <NavLink to="/FittingRoom">更衣室</NavLink>
+            </NavbarDiv>
+            <NavbarDiv>
+              <NavLink to="/Diary">穿搭日記</NavLink>
+            </NavbarDiv>
+            <IndexDiv>
+              <IndexLink to="/">
+                <Logo
+                  src={logo}
+                  alt="logo"
+                  style={{ height: "35px", width: "125px" }}
+                />
+              </IndexLink>
+            </IndexDiv>
+            <NavbarDiv>
+              <NavLink to="/FindNewDress">幫衣服找新家</NavLink>
+            </NavbarDiv>
+            <NavbarDiv>
+              <NavLink to="/Personal">我の檔案</NavLink>
+            </NavbarDiv>
+          </HeaderDiv>
+          <MobileHeader>☰</MobileHeader>
+        </>
+      ) : (
+        <>
+          <HeaderDiv>
+            {/* <NavbarDiv>
+              <NavLink to="/">更衣室</NavLink>
+            </NavbarDiv>
+            <NavbarDiv>
+              <NavLink to="/">穿搭日記</NavLink>
+            </NavbarDiv> */}
+            <IndexDiv>
+              <IndexLink to="/">
+                <Logo
+                  src={logo}
+                  alt="logo"
+                  style={{ height: "35px", width: "125px" }}
+                />
+              </IndexLink>
+            </IndexDiv>
+            {/* <NavbarDiv>
+              <NavLink to="/">幫衣服找新家</NavLink>
+            </NavbarDiv>
+            <NavbarDiv>
+              <NavLink to="/">我の檔案</NavLink>
+            </NavbarDiv> */}
+          </HeaderDiv>
+          <MobileHeader>☰</MobileHeader>
+        </>
+      )}
+
+      {/* <HeaderDiv>
         <NavbarDiv>
           <NavLink to="/FittingRoom">更衣室</NavLink>
         </NavbarDiv>
@@ -138,27 +205,9 @@ const Header = () => {
           <NavLink to="/Personal">我の檔案</NavLink>
         </NavbarDiv>
       </HeaderDiv>
-      <MobileHeader
-      // onClick={(e) => {
-      //   SwitchList(e.traget.value);
-      // }}
-      >
+      <MobileHeader>
         ☰
-      </MobileHeader>
-      {/* <MobileList>
-        <NavbarDiv>
-          <NavLink to="/FittingRoom">更衣室</NavLink>
-        </NavbarDiv>
-        <NavbarDiv>
-          <NavLink to="/Diary">穿搭日記</NavLink>
-        </NavbarDiv>
-        <NavbarDiv>
-          <NavLink to="/FindNewDress">幫衣服找新家</NavLink>
-        </NavbarDiv>
-        <NavbarDiv>
-          <NavLink to="/Personal">我の檔案</NavLink>
-        </NavbarDiv>
-      </MobileList> */}
+      </MobileHeader> */}
     </div>
   );
 };

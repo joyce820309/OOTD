@@ -6,6 +6,7 @@ import { facebookProvider } from "./SocialMediaAuth";
 import { googleProvider } from "./SocialMediaAuth";
 import Auth from "./Auth";
 import firebase from "../utils/firebase";
+import "firebase/firestore";
 import "firebase/auth";
 import "../CSS/SignIn.css";
 
@@ -72,18 +73,51 @@ const A = styled.a`
   margin: 15px 0;
 `;
 
+const Form = styled.div`
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+`;
+
+const ErrDiv = styled.div`
+  color: #f5756c;
+`;
+
 const SignIn = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const onSubmit = () => {
     console.log("進來囉");
+
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then((userCredential) => {
+        var user = userCredential;
+        console.log(user);
         history.push("/FittingRoom");
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/user-not-found":
+            setErrorMsg("OH, 這個信箱還沒被註冊過喔");
+            break;
+          case "auth/invalid-email":
+            setErrorMsg("記得使用正確的信箱格式唷！");
+            break;
+          case "auth/wrong-password":
+            setErrorMsg("密碼是錯的唷！");
+            break;
+          default:
+        }
       });
   };
 
@@ -95,7 +129,7 @@ const SignIn = () => {
 
   return (
     <div className=" form-container sign-in-container">
-      <form>
+      <Form>
         <HeaderSignin>Sign in</HeaderSignin>
         <SocialContainer>
           <SocialA href="#">
@@ -132,9 +166,10 @@ const SignIn = () => {
             setPassword(e.target.value);
           }}
         />
+        {errorMsg && <ErrDiv>{errorMsg}</ErrDiv>}
         <A href="#">Forgot your password?</A>
         <button onClick={onSubmit}>Sign In</button>
-      </form>
+      </Form>
     </div>
   );
 };

@@ -5,10 +5,10 @@ import "../CSS/FittingRoom.css";
 import { fabric } from "fabric";
 import "firebase/firestore";
 import "firebase/storage";
+import "firebase/auth";
 import firebase from "../utils/firebase";
 import { useHistory } from "react-router-dom";
 import Popup from "reactjs-popup";
-import { faCentercode } from "@fortawesome/free-brands-svg-icons";
 let movingImage;
 
 let filePath;
@@ -93,7 +93,10 @@ const ImgDiv = styled.div`
   margin: 30px;
 `;
 
+const EmptyDiv = styled.div``;
+
 const FittingRoom = () => {
+  const [account, setAccount] = useState("");
   const history = useHistory();
   const [itemSize, setItemSize] = useState("");
   const [canvas, setCanvas] = useState({});
@@ -103,8 +106,8 @@ const FittingRoom = () => {
   const [date, setDate] = useState("");
   const [imgFile, setImgFile] = useState("");
   const [imgURL, setImgURL] = useState("");
-  const [files, setFiles] = useState({});
   const [renderItems, setRenderItems] = useState([]);
+  const [isUser, setIsUser] = useState(null);
 
   useEffect(() => {
     setCanvas(initCanvas());
@@ -124,26 +127,43 @@ const FittingRoom = () => {
   }, [canvas]);
 
   useEffect(() => {
-    // const id = firebase.firestore().collection("users").doc().id;
-    firebase
-      .firestore()
-      .collection("users")
-      .doc("joy")
-      .collection("items")
-      .onSnapshot((snapshot) => {
-        let arr = [];
-        snapshot.forEach((doc) => {
-          arr.push(doc.data().itemImg);
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setIsUser(user);
+      }
+    });
+  }, [isUser]);
+
+  useEffect(() => {
+    if (isUser !== null) {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(isUser.email)
+        .get()
+        .then((doc) => {
+          setAccount(doc.data().name);
         });
-        setRenderItems(arr);
-        // .then((snapshot) => {
-        //   let arr = [];
-        //   snapshot.forEach((doc) => {
-        //     arr.push(doc.data().itemImg);
-        //   });
-        //   setRenderItems(arr);
-      });
-  }, []);
+    }
+  }, [isUser]);
+
+  useEffect(() => {
+    if (isUser !== null) {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(isUser.email)
+        .collection("items")
+        .orderBy("itemTime", "desc")
+        .onSnapshot((snapshot) => {
+          let arr = [];
+          snapshot.forEach((doc) => {
+            arr.push(doc.data().itemImg);
+          });
+          setRenderItems(arr);
+        });
+    }
+  }, [isUser]);
 
   const summitItem = () => {
     const YYYY = date.slice(0, 4);
@@ -152,7 +172,7 @@ const FittingRoom = () => {
     const item = firebase
       .firestore()
       .collection("users")
-      .doc("joy")
+      .doc(isUser.email)
       .collection("items")
       .doc();
 
@@ -163,11 +183,10 @@ const FittingRoom = () => {
       filePath.getDownloadURL().then((imageUrl) => {
         setImgURL(imageUrl);
 
-        this.draggable = true;
-        this.click = saveImg;
+        // imageUrl.draggable = true;
+        // imageUrl.click = saveImg;
 
         item.set({
-          // itemID: item.id,
           itemExpense: price,
           itemName: itemName,
           YYYY: YYYY,
@@ -176,6 +195,10 @@ const FittingRoom = () => {
           itemImg: imageUrl,
           itemTag: option,
           itemSize: itemSize,
+          itemTime: firebase.firestore.Timestamp.now(),
+          owner: isUser.email,
+          name: account,
+          status: "none",
         });
       });
     });
@@ -269,8 +292,6 @@ const FittingRoom = () => {
   //設定 Fabricjs Drop 事件 canvas.on('drop', dropImg)，Drop 事件後，計算出正確的位置，最後使用 new fabric.Image 新增一張圖片
   function dropImg(e) {
     const { offsetX, offsetY } = e.e;
-    console.log(e);
-
     console.log(movingImage);
     const image = new fabric.Image(movingImage, {
       width: movingImage.naturalWidth,
@@ -367,12 +388,6 @@ const FittingRoom = () => {
                     onChange={(e) => setImgFile(e)}
                     placeholder="選擇一件"
                   />
-                  {/* <button
-                    id="imageUploader"
-                    onClick={(e) => getFileInfo(e, imgFile)}
-                  >
-                    確認上傳圖片
-                  </button> */}
                 </Div>
                 <Div>
                   <button type="submit" onClick={(e) => summitItem(e)}>
@@ -399,14 +414,25 @@ const FittingRoom = () => {
               id="imgset"
               onMouseDown={(e) => saveImg(e)}
             >
-              {renderItems.map((url, index) => (
-                <img
-                  key={index}
-                  src={url}
-                  alt="clothes"
-                  style={{ maxHeight: "160px", margin: "20px" }}
-                />
-              ))}
+              {renderItems.length === 0 ? (
+                <EmptyDiv>
+                  {" "}
+                  現在衣櫥是空的唷！ 點擊＋號，一起來更衣吧！！
+                </EmptyDiv>
+              ) : (
+                renderItems.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    alt="clothes"
+                    style={{
+                      maxHeight: "160px",
+                      margin: "20px",
+                      cursor: "grab",
+                    }}
+                  />
+                ))
+              )}
             </div>
           </ImgsetBox>
         </ClosetBox>
