@@ -12,7 +12,7 @@ const HeaderDiv = styled.div`
   box-shadow: 0 1px 8px 0 rgb(34 36 38 / 18%);
   min-height: 80px;
   background: #f7d093;
-  position: fixed;
+  position: absolute;
   top: 0;
   width: 100%;
   z-index: 99;

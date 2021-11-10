@@ -3,13 +3,11 @@ import Header from "./Landing_Page/Header";
 import styled from "styled-components";
 import Pic from "./img/Pic.png";
 import firebase from "./utils/firebase";
-import "firebase/firestore";
-import PieChart from "./Personal/PieChart";
 import Popup from "reactjs-popup";
 import WebFont from "webfontloader";
 import "firebase/auth";
 import { useHistory } from "react-router-dom";
-import PieChartForm from "./Personal/PieChart";
+import Expense from "./Personal/Expense";
 
 const Main = styled.div`
   max-width: 100%;
@@ -32,12 +30,33 @@ const ProfileDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #31342dd6;
+
+  /* background-color: #f3d5ca; */
 `;
 
 const ProfileImg = styled.div`
   width: 120px;
   height: 120px;
   border: 1px solid black;
+`;
+
+const Button = styled.div`
+  background-color: #f3d5ca;
+  text-align: center;
+  line-height: 1.6em;
+  color: #31342d5c;
+  cursor: pointer;
+  width: 65% !important;
+  border-radius: 15px;
+  margin: 8px auto 3px auto;
+  padding: auto 5px;
+  font-size: 15px;
+  font-weight: 600;
+  &:hover {
+    transform: scale(1.2) !important;
+    background-color: #ffdd759e;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -112,7 +131,7 @@ const ClosetDiv = styled.div`
   grid-gap: 0px 10px;
   width: 680px;
   padding: 15px;
-  height: 230px;
+  min-height: 230px;
   background-color: #aab8bb6e;
   @media screen and (max-width: 1250px) {
     grid-template-columns: repeat(4, 1fr);
@@ -190,6 +209,7 @@ const StyledPopup = styled(Popup)`
     display: flex;
     height: 550px;
     border-radius: 25px;
+    background-color: snow;
   }
 `;
 
@@ -206,9 +226,24 @@ const ItemForm = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* background-color: snow; */
 `;
 
-const ImgPopup = styled.div``;
+const FormTitle = styled.div`
+  margin-bottom: 15px;
+  color: #768891f0;
+  border-bottom: 5px solid #768891a1;
+  font-weight: bold;
+`;
+
+const ImgPopup = styled.div`
+  box-shadow: 0 0.2rem 1.2rem rgb(0 0 0 / 20%);
+  margin-bottom: 15px;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+`;
 
 const Div = styled.div`
   margin-bottom: 8px;
@@ -217,7 +252,7 @@ const Div = styled.div`
 const Span = styled.div`
   color: #3f484cc2;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 13px;
 `;
 
 const Submitbtn = styled.div`
@@ -258,49 +293,6 @@ const LeftDiv = styled.div`
   margin-right: 50px;
 `;
 
-const BudgetSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 450px;
-  margin-top: 20px;
-  position: relative;
-
-  @media screen and (max-width: 1250px) {
-    margin-top: 70px;
-  }
-`;
-
-const BudgetSpan = styled.span`
-  background-color: #dfb166b8;
-  position: absolute;
-  top: -25px;
-  left: 33px;
-  color: #72674cd9;
-  padding: 10px 12px 5px 5px;
-  font-size: 15px;
-  transform: rotate(-3.8deg);
-`;
-
-const BudgetDiv = styled.div`
-  margin-bottom: 20px;
-  background-color: #f0bc6880;
-  position: relative;
-  width: 60%;
-  padding: 25px 25px 35px;
-  transform: rotate(-1.8deg);
-  height: 130px;
-`;
-
-const ExpDiv = styled.div`
-  background-color: #f0bc6880;
-  width: 60%;
-  margin-top: 106px;
-  position: absolute;
-  right: 0;
-  padding: 35px 25px 45px;
-  transform: rotate(1.8deg);
-`;
-
 const Personal = () => {
   const [itemsCollection, setItemsCollection] = useState([]);
   const [exchangeDone, setExchangeDone] = useState([]);
@@ -308,11 +300,6 @@ const Personal = () => {
   const [userEmail, setUseremail] = useState("");
   const [exchangeName, setExchangeName] = useState("");
   const [exchangeInfo, setExchangeInfo] = useState("");
-  const [renderItems, setRenderItems] = useState([]);
-  const [budget, setBudget] = useState(0);
-  const [expense, setExpense] = useState(0);
-  const [remain, setRemain] = useState(0);
-  const [editBudget, setEditBudget] = useState(false);
   const history = useHistory();
   const [isUser, setIsUser] = useState(null);
   const [isPending, setIsPending] = useState(false);
@@ -346,35 +333,6 @@ const Personal = () => {
           if (isMounted) {
             setUserName(doc.data().name);
             setUseremail(doc.data().email);
-            setBudget(doc.data().budget);
-            setRemain(doc.data().remaining);
-          }
-        });
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [isUser]);
-
-  useEffect(() => {
-    let isMounted = true;
-    if (isUser !== null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(isUser.email)
-        .collection("items")
-        .get()
-        .then((snapshot) => {
-          let arr = [];
-          let totalExp = 0;
-          snapshot.forEach((doc) => {
-            arr.push(doc.data().itemImg);
-            totalExp += doc.data().itemExpense;
-          });
-          if (isMounted) {
-            setRenderItems(arr);
-            setExpense(totalExp);
           }
         });
     }
@@ -465,43 +423,59 @@ const Personal = () => {
     setIsPending(true);
   };
 
-  const calculate = () => {
-    let money = Number(budget - expense);
-    if (money < 0) {
-      money = 0;
-    }
-    setRemain(money);
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(isUser.email)
-      .update({
-        budget: Number(budget),
-        remaining: Number(remain),
-      })
-      .then(() => {
-        setEditBudget(false);
-      });
-  };
+  // const deleteExchangeItem = (item, id) => {
+  //   const itemDoc = firebase
+  //     .firestore()
+  //     .collection("users")
+  //     .doc(isUser.email)
+  //     .collection("items")
+  //     .doc(id);
+  //   let ref = firebase.storage().ref("itemImages/" + itemDoc.id);
+
+  //   ref
+  //     .delete()
+  //     .then(() => {
+  //       firebase
+  //         .firestore()
+  //         .collection("users")
+  //         .doc(isUser.email)
+  //         .collection("exchangeItems")
+  //         .doc(id)
+  //         .delete()
+  //         .then(() => {
+  //           itemDoc.delete();
+  //         });
+  //     })
+  //     .then(() => {
+  //       alert("刪除成功");
+  //     });
+  // };
 
   const deleteItem = (item, id) => {
-    console.log();
-    /////////////////
-    firebase
+    const itemDoc = firebase
       .firestore()
       .collection("users")
       .doc(isUser.email)
-      .collection("exchangeItems")
-      .doc(id)
+      .collection("items")
+      .doc(id);
+    let ref = firebase.storage().ref("itemImages/" + itemDoc.id);
+
+    ref
       .delete()
       .then(() => {
         firebase
           .firestore()
           .collection("users")
           .doc(isUser.email)
-          .collection("items")
+          .collection("exchangeItems")
           .doc(id)
-          .delete();
+          .delete()
+          .then(() => {
+            itemDoc.delete();
+          });
+      })
+      .then(() => {
+        alert("刪除成功");
       });
   };
 
@@ -530,7 +504,7 @@ const Personal = () => {
               </ProfileImg>
               <UserInfo>Hi, {userName}</UserInfo>
               <UserInfo>{userEmail}</UserInfo>
-              <button onClick={() => signOut()}>Log Out</button>
+              <Button onClick={() => signOut()}>Log Out</Button>
             </ProfileDiv>
             <ExchangeSection>
               <ExchangeTitle>交換來的衣服</ExchangeTitle>
@@ -586,12 +560,14 @@ const Personal = () => {
                       {(close) => (
                         <Backdrop>
                           <ItemForm>
+                            <FormTitle>我想送出</FormTitle>
+
                             <ImgPopup>
                               <img
                                 src={item.data.itemImg}
                                 alt="exchange-item"
                                 style={{
-                                  marginBottom: "12px",
+                                  margin: "12px auto",
                                   maxHeight: "120px",
                                 }}
                               />
@@ -639,9 +615,10 @@ const Personal = () => {
                             <Div>
                               <Submitbtn
                                 type="submit"
-                                onClick={(e) =>
-                                  sumbitExchange(e, item, item.id)
-                                }
+                                onClick={(e) => {
+                                  sumbitExchange(e, item, item.id);
+                                  close();
+                                }}
                               >
                                 好了！
                               </Submitbtn>
@@ -658,40 +635,7 @@ const Personal = () => {
             </ClosetDiv>
           </ClosetSection>
         </LeftDiv>
-        <BudgetSection>
-          {editBudget ? (
-            <BudgetDiv>
-              <BudgetSpan>設定預算</BudgetSpan>
-              <Span>這個月的治裝費預算</Span>
-              <input
-                type="number"
-                onChange={(e) => setBudget(e.target.value)}
-                style={{ margin: "8px 10px 10px 0" }}
-              />
-              <button onClick={(e) => calculate(e)}>好了</button>
-            </BudgetDiv>
-          ) : (
-            <BudgetDiv>
-              <BudgetSpan>設定預算</BudgetSpan>
-              <Span>這個月的治裝費預算</Span>
-              <div>{budget}</div>
-              <button
-                onClick={() => {
-                  setEditBudget(true);
-                }}
-              >
-                {" "}
-                編輯
-              </button>
-            </BudgetDiv>
-          )}
-
-          <ExpDiv>
-            <Span>這個月已經花了 ${expense}</Span>
-            <Span>我這個月還可以花 ${remain}</Span>
-          </ExpDiv>
-          <PieChartForm />
-        </BudgetSection>
+        <Expense />
       </Main>
     </div>
   );

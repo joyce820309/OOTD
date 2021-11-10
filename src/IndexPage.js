@@ -17,6 +17,7 @@ import SignUp from "./SignIn_Page/SignUp";
 import SignIn from "./SignIn_Page/SignIn";
 import OverLay from "./SignIn_Page/OverLay";
 import "aos/dist/aos.css"; // You can also use <link> for styles
+import { useHistory } from "react-router-dom";
 
 const Section = styled.div`
   height: 100vh;
@@ -50,7 +51,6 @@ const TextDiv = styled.div`
 
 const Button = styled.div`
   background-color: #f3d5ca;
-  /* background-color: #78938729 */
   text-align: center;
   line-height: 1.6em;
   color: #31342d5c;
@@ -61,6 +61,7 @@ const Button = styled.div`
   font-weight: 600;
   &:hover {
     transform: scale(1.2) !important;
+    background-color: #ffdd759e;
   }
 `;
 
@@ -208,6 +209,8 @@ const ContentImg2 = styled.img`
 
 function IndexPage() {
   AOS.init();
+  const history = useHistory();
+  const [isUser, setIsUser] = useState(null);
   const [toggleClassName, setClassName] = useState("container");
   const [userName, setUserName] = useState(null);
 
@@ -219,12 +222,28 @@ function IndexPage() {
     });
   }, []);
 
+  // useEffect(() => {
+  //   const user = firebase.auth().currentUser;
+  //   setUserName(user);
+  // }, []);
+
   useEffect(() => {
-    const user = firebase.auth().currentUser;
-    setUserName(user);
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setIsUser(user);
+      }
+    });
   }, []);
 
-  // console.log(userName.uid);
+  const signOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        history.push("/");
+        setIsUser(null);
+      });
+  };
 
   function onClick() {
     if (toggleClassName === "container") {
@@ -236,9 +255,7 @@ function IndexPage() {
 
   return (
     <Section>
-      <div>
-        <Header />
-      </div>
+      <Header />
 
       <SectionBG />
       <Section1>
@@ -262,20 +279,25 @@ function IndexPage() {
             <Typing>今天穿什麼？</Typing>
           </TypingDiv>
           <div style={{ zIndex: "15" }}>
-            <StyledPopup
-              modal
-              trigger={<Button data-aos="zoom-in-left">Login In</Button>}
-            >
-              {(close) => (
-                <SignBody>
-                  <div className={toggleClassName}>
-                    <SignIn />
-                    <SignUp />
-                    <OverLay onClick={onClick} />
-                  </div>
-                </SignBody>
-              )}
-            </StyledPopup>
+            {isUser ? (
+              <Button onClick={() => signOut()}>Sign Out</Button>
+            ) : (
+              <StyledPopup
+                modal
+                trigger={<Button data-aos="zoom-in-left">Sign In</Button>}
+              >
+                {(close) => (
+                  <SignBody>
+                    <div className={toggleClassName}>
+                      <SignIn />
+                      <SignUp close={close} />
+                      <OverLay onClick={onClick} />
+                    </div>
+                  </SignBody>
+                )}
+              </StyledPopup>
+            )}
+
             <div style={{ display: "flex" }}>
               <SmallImg
                 src={small1}

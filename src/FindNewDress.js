@@ -23,10 +23,10 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: rgb(255, 255, 255);
-    /* opacity: 0.5; */
     width: 700px;
     display: flex;
     height: 550px;
+    border-radius: 25px;
   }
 `;
 
@@ -37,6 +37,7 @@ const Backdrop = styled.div`
   display: flex;
   justify-content: space-evenly;
   position: relative;
+  border-radius: 25px;
 `;
 
 const ItemInfo = styled.div`
@@ -56,6 +57,7 @@ const ImgDiv = styled.div`
   justify-content: center;
   background-color: snow;
   box-shadow: 0 0.2rem 1.2rem rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 `;
 
 const ItemForm = styled.div`
@@ -98,27 +100,26 @@ const Submitbtn = styled.div`
 `;
 
 const Main = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px 10px;
-  margin-top: 115px;
-  margin-left: 30px;
-  width: 100%;
+  margin: 115px auto 20px auto;
+  max-width: 1200px;
   padding: 0 2rem;
-  text-align: center;
-  @media screen and (max-width: 1100px) {
-    grid-template-columns: repeat(2, 1fr);
-    margin-left: 20px;
-  }
 `;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+`;
+
 const EachBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 73%;
+  width: 30%;
   margin-top: 2rem;
   background: #fff;
   padding: 1rem;
+  box-shadow: 0 0.3rem 1rem rgb(0 0 0 / 20%);
   @media screen and (max-width: 1100px) {
     padding: 0.5rem;
   }
@@ -143,11 +144,39 @@ const ImgBox = styled.div`
 const DetailBox = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  /* justify-content: center; */
   margin-bottom: 8px;
-  background-color: #b8d5db8c;
+  background-color: #b8d5db5c;
   color: #39474ab8;
-  padding: 5px;
+  padding: 5px 16px;
+  width: 100%;
+`;
+
+const Detail = styled.div`
+  font-size: 1rem;
+  text-align: center;
+  line-height: 2em;
+  font-weight: 700;
+  color: #6e7f83b5;
+  letter-spacing: 0.2rem;
+`;
+
+const Button = styled.div`
+  background-color: #a9dbe596;
+  text-align: center;
+  line-height: 1.6em;
+  color: #31342d5c;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 8px auto 3px auto;
+  padding: 3px 10px;
+  font-size: 15px;
+  font-weight: 600;
+  &:hover {
+    transform: scale(1.2) !important;
+    background-color: #ffdd759e;
+  }
 `;
 
 const FindNewDress = () => {
@@ -201,7 +230,7 @@ const FindNewDress = () => {
       .doc(isUser.email)
       .collection("exchangeItems")
       .doc(id)
-      .update({
+      .set({
         userName: userName,
         userPhone: userPhone,
         userAddress: userAddress,
@@ -230,159 +259,175 @@ const FindNewDress = () => {
       .update({
         status: "done",
       });
-    console.log("status done");
+
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(item.owner)
+      .collection("exchangeItems")
+      .doc(id)
+      .update({
+        status: "done",
+      });
   };
 
   return (
     <div>
       <Header />
       <Main style={{ fontFamily: "Chilanka" }}>
-        {allItems.map((item, i) => {
-          return (
-            <EachBox key={i}>
-              <ImgBox>
-                <img
-                  src={item.data.itemImg}
-                  alt="exchange item"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </ImgBox>
-              <DetailBox>
-                <div style={{ marginBottom: "5px", fontWeight: "700" }}>
-                  NAME：{item.data.exchangeName}
-                </div>
-                <div style={{ marginBottom: "5px", fontWeight: "700" }}>
-                  SIZE：{item.data.itemSize}
-                </div>
-              </DetailBox>
+        <Container>
+          {allItems.map((item, i) => {
+            return (
+              <EachBox key={i}>
+                <ImgBox>
+                  <img
+                    src={item.data.itemImg}
+                    alt="exchange item"
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                </ImgBox>
+                <DetailBox>
+                  <Detail style={{ marginBottom: "5px", fontWeight: "700" }}>
+                    NAME：{item.data.exchangeName}
+                  </Detail>
+                  <Detail style={{ marginBottom: "5px", fontWeight: "700" }}>
+                    SIZE：{item.data.itemSize}
+                  </Detail>
+                </DetailBox>
 
-              {item.data.owner !== isUser.email ? (
-                <StyledPopup modal trigger={<button>點我看更多</button>}>
-                  {(close) => (
-                    <Backdrop>
-                      {/* <InfoBG /> */}
-                      <ItemInfo>
-                        <ImgDiv>
-                          <img
-                            src={item.data.itemImg}
-                            alt="exchange item"
-                            style={{ height: "100%" }}
-                          />
-                        </ImgDiv>
-                        <Div>
-                          <Span>主人叫做：{item.data.name}</Span>
-                        </Div>
-                        <Div>
-                          <Span>尺寸：{item.data.itemSize}</Span>
-                        </Div>
-                        <Div>
-                          <Span>你要交換的是：{item.data.exchangeName}</Span>
-                        </Div>
-                        <Div>
-                          <Span>自我介紹：{item.data.exchangeInfo}</Span>
-                        </Div>
-                      </ItemInfo>
-                      <ItemForm>
-                        <FormTitle>我想要它</FormTitle>
-                        <Div>
-                          <Span>你的真名：</Span>
-                          <input
-                            type="text"
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)}
-                            placeholder="喬伊斯"
-                          />
-                        </Div>
+                {item.data.owner !== isUser.email ? (
+                  <StyledPopup modal trigger={<Button>點我看更多</Button>}>
+                    {(close) => (
+                      <Backdrop>
+                        {/* <InfoBG /> */}
+                        <ItemInfo>
+                          <ImgDiv>
+                            <img
+                              src={item.data.itemImg}
+                              alt="exchange item"
+                              style={{ height: "100%" }}
+                            />
+                          </ImgDiv>
+                          <Div>
+                            <Span>主人叫做：{item.data.name}</Span>
+                          </Div>
+                          <Div>
+                            <Span>尺寸：{item.data.itemSize}</Span>
+                          </Div>
+                          <Div>
+                            <Span>你要交換的是：{item.data.exchangeName}</Span>
+                          </Div>
+                          <Div>
+                            <Span>自我介紹：{item.data.exchangeInfo}</Span>
+                          </Div>
+                        </ItemInfo>
+                        <ItemForm>
+                          <FormTitle>我想要它</FormTitle>
+                          <Div>
+                            <Span>你的真名：</Span>
+                            <input
+                              type="text"
+                              value={userName}
+                              onChange={(e) => setUserName(e.target.value)}
+                              placeholder="喬伊斯"
+                            />
+                          </Div>
 
-                        <Div>
-                          <Span>手機號碼：</Span>
-                          <input
-                            type="text"
-                            value={userPhone}
-                            placeholder="09"
-                            onChange={(e) => setUserPhone(e.target.value)}
-                          />
-                        </Div>
+                          <Div>
+                            <Span>手機號碼：</Span>
+                            <input
+                              type="text"
+                              value={userPhone}
+                              placeholder="09"
+                              onChange={(e) => setUserPhone(e.target.value)}
+                            />
+                          </Div>
 
-                        <Div>
-                          <Span>希望交換地址：</Span>
-                          <input
-                            type="text"
-                            value={userAddress}
-                            placeholder="台北市政府站"
-                            onChange={(e) => setUserAddress(e.target.value)}
-                          />
-                        </Div>
+                          <Div>
+                            <Span>希望交換地址：</Span>
+                            <input
+                              type="text"
+                              value={userAddress}
+                              placeholder="台北市政府站"
+                              onChange={(e) => setUserAddress(e.target.value)}
+                            />
+                          </Div>
 
-                        <Div>
-                          <Span>希望交換日期：</Span>
-                          <input
-                            type="date"
-                            style={{ color: "gray" }}
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                          />
-                        </Div>
+                          <Div>
+                            <Span>希望交換日期：</Span>
+                            <input
+                              type="date"
+                              style={{ color: "gray" }}
+                              value={date}
+                              onChange={(e) => setDate(e.target.value)}
+                            />
+                          </Div>
 
-                        <Div>
-                          <Span>希望交換時間：</Span>
-                          <input
-                            type="time"
-                            style={{ color: "gray" }}
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                          />
-                        </Div>
+                          <Div>
+                            <Span>希望交換時間：</Span>
+                            <input
+                              type="time"
+                              style={{ color: "gray" }}
+                              value={time}
+                              onChange={(e) => setTime(e.target.value)}
+                            />
+                          </Div>
 
-                        <Div>
-                          <Submitbtn
-                            type="submit"
-                            onClick={(e) => sumbitForm(e, item.data, item.id)}
-                          >
-                            好了！
-                          </Submitbtn>
-                        </Div>
-                      </ItemForm>
-                    </Backdrop>
-                  )}
-                </StyledPopup>
-              ) : (
-                <StyledPopup modal trigger={<button>查看</button>}>
-                  {(close) => (
-                    <Backdrop>
-                      {/* <InfoBG /> */}
-                      <ItemInfo>
-                        <ImgDiv>
-                          <img
-                            src={item.data.itemImg}
-                            alt="exchange item"
-                            style={{ height: "100%" }}
-                          />
-                        </ImgDiv>
-                        <Div>
-                          <Span>我交換出去的是：{item.data.exchangeName}</Span>
-                        </Div>
-                        <Div>
-                          <Span>
-                            它の尺寸：
-                            {item.data.itemSize}
-                          </Span>
-                        </Div>
+                          <Div>
+                            <Submitbtn
+                              type="submit"
+                              onClick={(e) => {
+                                sumbitForm(e, item.data, item.id);
+                                close();
+                              }}
+                            >
+                              好了！
+                            </Submitbtn>
+                          </Div>
+                        </ItemForm>
+                      </Backdrop>
+                    )}
+                  </StyledPopup>
+                ) : (
+                  <StyledPopup modal trigger={<Button>查看</Button>}>
+                    {(close) => (
+                      <Backdrop>
+                        {/* <InfoBG /> */}
+                        <ItemInfo>
+                          <ImgDiv>
+                            <img
+                              src={item.data.itemImg}
+                              alt="exchange item"
+                              style={{ height: "100%" }}
+                            />
+                          </ImgDiv>
+                          <Div>
+                            <Span>
+                              我交換出去的是：{item.data.exchangeName}
+                            </Span>
+                          </Div>
+                          <Div>
+                            <Span>
+                              它の尺寸：
+                              {item.data.itemSize}
+                            </Span>
+                          </Div>
 
-                        <Div>
-                          <Span>
-                            它の自我介紹：
-                            {item.data.exchangeInfo}
-                          </Span>
-                        </Div>
-                      </ItemInfo>
-                    </Backdrop>
-                  )}
-                </StyledPopup>
-              )}
-            </EachBox>
-          );
-        })}
+                          <Div>
+                            <Span>
+                              它の自我介紹：
+                              {item.data.exchangeInfo}
+                            </Span>
+                          </Div>
+                        </ItemInfo>
+                      </Backdrop>
+                    )}
+                  </StyledPopup>
+                )}
+              </EachBox>
+            );
+          })}
+        </Container>
       </Main>
     </div>
   );

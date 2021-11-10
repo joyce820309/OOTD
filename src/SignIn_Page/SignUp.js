@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
@@ -92,12 +92,22 @@ const ErrDiv = styled.div`
 //   margin: 15px 0;
 // `;
 
-const SignUp = () => {
+const SignUp = ({ close }) => {
   const history = useHistory();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [isUser, setIsUser] = useState("");
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setIsUser(user);
+      }
+    });
+  }, []);
 
   const handleSocialMedia = (provider) => {
     const res = Auth(provider);
@@ -110,18 +120,6 @@ const SignUp = () => {
     });
     history.push("/FittingRoom");
   };
-
-  // const checkFormat = () => {
-  //   if (name === "") {
-  //     alert("記得輸入你的名稱唷！");
-  //   } else if (email === "") {
-  //     alert("記得輸入你的信箱唷！");
-  //   } else if (password === "") {
-  //     alert("記得輸入你的密碼唷！");
-  //   } else {
-  //     onSubmit();
-  //   }
-  // };
 
   const onSubmit = (e) => {
     console.log("進來囉");
@@ -152,7 +150,7 @@ const SignUp = () => {
   };
 
   const setUserInfo = () => {
-    const uid = firebase.auth().currentUser.uid;
+    // const uid = firebase.auth().currentUser.uid;
     const uEmail = firebase.auth().currentUser.email;
     firebase.firestore().collection("users").doc(uEmail).set({
       name: name,
@@ -211,6 +209,7 @@ const SignUp = () => {
         <button
           onClick={(e) => {
             onSubmit(e);
+            // close();
           }}
         >
           Sign Up
