@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
@@ -70,6 +70,21 @@ const SocialA = styled.a`
   width: 40px;
 `;
 
+const Form = styled.div`
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+`;
+
+const ErrDiv = styled.div`
+  color: #f5756c;
+`;
+
 // const A = styled.a`
 //   color: #333;
 //   font-size: 14px;
@@ -77,30 +92,34 @@ const SocialA = styled.a`
 //   margin: 15px 0;
 // `;
 
-const SignUp = () => {
+const SignUp = ({ close }) => {
   const history = useHistory();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const [isUser, setIsUser] = useState("");
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setIsUser(user);
+      }
+    });
+  }, []);
 
   const handleSocialMedia = (provider) => {
     const res = Auth(provider);
     console.log(res);
-    // setUserInfo();
+
+    firebase.firestore().collection("users").doc().set({
+      name: firebase.auth().currentUser.displayName,
+      email: firebase.auth().currentUser.email,
+      // password: password,
+    });
     history.push("/FittingRoom");
   };
-
-  // const checkFormat = () => {
-  //   if (name === "") {
-  //     alert("記得輸入你的名稱唷！");
-  //   } else if (email === "") {
-  //     alert("記得輸入你的信箱唷！");
-  //   } else if (password === "") {
-  //     alert("記得輸入你的密碼唷！");
-  //   } else {
-  //     onSubmit();
-  //   }
-  // };
 
   const onSubmit = (e) => {
     console.log("進來囉");
@@ -113,12 +132,27 @@ const SignUp = () => {
       })
       .then(() => {
         history.push("/FittingRoom");
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setErrorMsg("已經使用過這個信箱囉");
+            break;
+          case "auth/invalid-email":
+            setErrorMsg("記得使用正確的信箱格式唷！");
+            break;
+          case "auth/weak-password":
+            setErrorMsg("請再加強密碼強度，加油！");
+            break;
+          default:
+        }
       });
   };
 
   const setUserInfo = () => {
-    console.log("123");
-    firebase.firestore().collection("users").doc("joy").set({
+    // const uid = firebase.auth().currentUser.uid;
+    const uEmail = firebase.auth().currentUser.email;
+    firebase.firestore().collection("users").doc(uEmail).set({
       name: name,
       email: email,
       password: password,
@@ -127,7 +161,7 @@ const SignUp = () => {
 
   return (
     <div className="form-container sign-up-container">
-      <form>
+      <Form>
         <HeaderSignin>Create Account</HeaderSignin>
         <SocialContainer>
           <SocialA href="#">
@@ -171,14 +205,16 @@ const SignUp = () => {
             setPassword(e.target.value);
           }}
         />
+        {errorMsg && <ErrDiv>{errorMsg}</ErrDiv>}
         <button
           onClick={(e) => {
             onSubmit(e);
+            // close();
           }}
         >
           Sign Up
         </button>
-      </form>
+      </Form>
     </div>
   );
 };

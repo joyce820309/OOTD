@@ -16,7 +16,7 @@ span {
 
 button {
   border-radius: 10px;
-  border: 1px solid #fdb254;
+  border: 1px solid #d4e4eb;
   background-color: #fdb254;
   color: #ffffff;
   font-size: 12px;
@@ -41,7 +41,7 @@ button:focus {
   border-radius: 25px;
 }
 
-form {
+/* form {
   background-color: #ffffff;
   display: flex;
   align-items: center;
@@ -50,7 +50,7 @@ form {
   padding: 0 50px;
   height: 100%;
   text-align: center;
-}
+} */
 
 .container {
   background-color: rgba(255, 255, 255, 0.603);

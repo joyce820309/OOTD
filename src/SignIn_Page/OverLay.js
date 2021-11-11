@@ -55,7 +55,7 @@ const BackgroundRight = styled.div`
   height: 45%;
   bottom: 124px;
   right: 0;
-  background-color: #bff5e438;
+  /* background-color: #bff5e438; */
   z-index: -1;
 `;
 
