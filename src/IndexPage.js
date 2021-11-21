@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Landing_Page/Header";
+
 import styled from "styled-components";
 import combo from "./img/combo.png";
 import pinkSweater from "./img/pinkSweater.jpeg";
@@ -19,27 +19,24 @@ import OverLay from "./SignIn_Page/OverLay";
 import "aos/dist/aos.css"; // You can also use <link> for styles
 import { useHistory } from "react-router-dom";
 
-const Section = styled.div`
-  height: 100vh;
+const Container = styled.div`
   position: relative;
   font-family: "Chilanka";
 `;
 
 const SectionBG = styled.div`
   background-color: #f5d1c36e;
-  height: 450px;
+  height: 510px;
   width: 100%;
   position: absolute;
-  top: 130px;
+  top: 10px;
   z-index: -1;
 `;
 
 const Section1 = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 50px;
-  padding-top: 50px;
-  /* border: 2px solid steelblue; */
+  padding-top: 110px;
 `;
 
 const TextDiv = styled.div`
@@ -134,6 +131,14 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
+const SmallImgDiv = styled.div`
+  display: flex;
+  margin-left: 0.8rem;
+  @media screen and (max-width: 1215px) {
+    margin-left: 0;
+  }
+`;
+
 const SmallImg = styled.img`
   margin-top: 30px;
   width: 180px;
@@ -143,20 +148,22 @@ const SmallImg = styled.img`
 const Section2 = styled.div`
   position: relative;
   display: flex;
+  margin-top: 35px;
 `;
 const ImgDiv = styled.div`
+  /* position: absolute; */
+  /* top: -10px; */
   @media screen and (max-width: 1100px) {
   }
 `;
 const BlueDiv = styled.div`
   position: absolute;
-  top: 50px;
   left: 350px;
   background-color: #c4d7d19c;
   z-index: -1;
   width: 620px;
   height: 430px;
-  height: 98%;
+  height: 100%;
 `;
 
 const ComboImg = styled.img`
@@ -222,11 +229,6 @@ function IndexPage() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   const user = firebase.auth().currentUser;
-  //   setUserName(user);
-  // }, []);
-
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -254,9 +256,7 @@ function IndexPage() {
   }
 
   return (
-    <Section>
-      <Header />
-
+    <Container>
       <SectionBG />
       <Section1>
         <BedroomDiv>
@@ -298,7 +298,7 @@ function IndexPage() {
               </StyledPopup>
             )}
 
-            <div style={{ display: "flex" }}>
+            <SmallImgDiv>
               <SmallImg
                 src={small1}
                 alt="small-pic"
@@ -322,7 +322,7 @@ function IndexPage() {
                   // marginRight: "-5px",
                 }}
               />
-            </div>
+            </SmallImgDiv>
           </div>
         </TextDiv>
       </Section1>
@@ -335,7 +335,7 @@ function IndexPage() {
           style={{
             display: "flex",
             flexDirection: "column",
-            marginLeft: "30px",
+            margin: "20px auto 40px 30px",
           }}
         >
           <ContentDiv>
@@ -355,7 +355,7 @@ function IndexPage() {
           </ContentDiv>
         </div>
       </Section2>
-    </Section>
+    </Container>
   );
 }
 

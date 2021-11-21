@@ -3,55 +3,117 @@ import styled from "styled-components";
 import firebase from "../utils/firebase";
 import WebFont from "webfontloader";
 import "firebase/auth";
+import Arrow from "../img/arrow.png";
+import ArrowDark from "../img/arrowDark.png";
+import LineChartForm from "./LineChart";
 import PieChartForm from "./PieChart";
 
-const BudgetSection = styled.div`
+import SubTotal from "./SubTotal";
+
+const BudgetContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 450px;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  max-height: 720px;
+  padding: 15px;
+  background-color: #f5e8d4;
+  z-index: 5;
+  overflow-y: scroll;
   position: relative;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f5e8d4;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 3px solid #f5e8d4;
+  }
+  scrollbar-width: 5px;
+  scrollbar-color: #f5e8d4 #f5e8d4;
 
   @media screen and (max-width: 1250px) {
-    margin-top: 70px;
+    /* margin-top: 70px; */
   }
 `;
 
-const BudgetSpan = styled.span`
-  background-color: #dfb166b8;
-  position: absolute;
-  top: -25px;
-  left: 33px;
-  color: #72674cd9;
-  padding: 10px 12px 5px 5px;
-  font-size: 15px;
-  transform: rotate(-3.8deg);
-`;
-
 const BudgetDiv = styled.div`
-  margin-bottom: 20px;
-  background-color: #f0bc6880;
-  position: relative;
-  width: 60%;
+  margin: 20px auto auto 20px;
+  background-color: #c8dadeb5;
+  width: 50%;
+  position: absolute;
   padding: 25px 25px 35px;
   transform: rotate(-1.8deg);
   height: 130px;
+  top: 210px;
 `;
 
-const ExpDiv = styled.div`
-  background-color: #f0bc6880;
-  width: 60%;
-  margin-top: 106px;
+const ExpDiv = styled(BudgetDiv)`
+  margin: 100px 10px auto auto;
   position: absolute;
-  right: 0;
-  padding: 35px 25px 45px;
+  background-color: #fbd2c19e;
+  right: 50px;
+  padding: 88px 25px 95px auto;
   transform: rotate(1.8deg);
+  top: 200px;
+`;
+
+const LabelDiv = styled.div`
+  position: absolute;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 800;
+  background-color: #bcd3a1;
+  transform: rotate(-1.3deg);
+  top: 530px;
+  right: 320px;
+  width: 185px;
+  height: 45px !important;
+  color: #69725d;
+  /* padding: auto 15px; */
+  border-radius: 3px;
+`;
+
+const LabelDiv2 = styled(LabelDiv)`
+  top: 710px;
+  right: 100px;
+  background-color: #ddd69cd4;
+  color: #64624dd4;
+  width: 165px;
+  transform: rotate(2.3deg);
+`;
+const ArrowDarkImg = styled.img`
+  /* transform: rotate(7.3deg) !important; */
+  height: 150px;
+  top: 590px;
+  right: 390px;
+  /* transform: scale(0.6); */
+  position: absolute;
+`;
+
+const ArrowImg = styled.img`
+  /* transform: rotate(2.3deg); */
+  top: 737px;
+  right: 46px;
+  height: 150px;
+  position: absolute;
+`;
+
+const EditBtn = styled.button`
+  border-radius: 8px;
+  background-color: #99858666;
+  padding: 4px 12px;
+  font-size: 0.9rem;
+  margin-left: 12px;
+  color: #31342dcf;
 `;
 
 const Span = styled.div`
   color: #3f484cc2;
   font-weight: 500;
-  font-size: 13px;
+  font-size: 1.1rem;
 `;
 
 const Expense = () => {
@@ -59,6 +121,7 @@ const Expense = () => {
   const [budget, setBudget] = useState(0);
   const [expense, setExpense] = useState(0);
   const [remain, setRemain] = useState(0);
+  const [positiveRemain, setPositiveRemain] = useState(0);
   const [editBudget, setEditBudget] = useState(false);
   const [renderItems, setRenderItems] = useState([]);
 
@@ -90,6 +153,8 @@ const Expense = () => {
           if (isMounted) {
             setBudget(doc.data().budget);
             setRemain(doc.data().remaining);
+
+            console.log(Math.abs(doc.data().budget - doc.data().remaining));
           }
         });
     }
@@ -127,15 +192,13 @@ const Expense = () => {
 
   const calculate = () => {
     let money = Number(budget - expense);
-    if (money < 0) {
-      money = 0;
-    }
+
     setRemain(money);
     firebase
       .firestore()
       .collection("users")
       .doc(isUser.email)
-      .set(
+      .update(
         {
           budget: Number(budget),
           remaining: Number(money),
@@ -147,40 +210,75 @@ const Expense = () => {
       });
   };
   return (
-    <BudgetSection>
+    <BudgetContainer>
+      <SubTotal />
+
       {editBudget ? (
         <BudgetDiv>
-          <BudgetSpan>設定預算</BudgetSpan>
           <Span>這個月的治裝費預算</Span>
           <input
             type="number"
             onChange={(e) => setBudget(e.target.value)}
-            style={{ margin: "8px 10px 10px 0" }}
+            style={{ margin: "8px 10px 10px 0", backgroundColor: "#4488dd30" }}
           />
           <button onClick={(e) => calculate(e)}>好了</button>
         </BudgetDiv>
       ) : (
         <BudgetDiv>
-          <BudgetSpan>設定預算</BudgetSpan>
-          <Span>這個月的治裝費預算</Span>
-          <div>{budget}</div>
-          <button
+          <Span>
+            這個月的治裝費預算：
+            <span style={{ fontSize: "1.1rem", fontWeight: "600" }}>
+              {budget}元
+            </span>
+          </Span>
+          <EditBtn
+            style={{ backgroundColor: "#2979dc69" }}
             onClick={() => {
               setEditBudget(true);
             }}
           >
             {" "}
             編輯
-          </button>
+          </EditBtn>
         </BudgetDiv>
       )}
 
       <ExpDiv>
-        <Span>這個月已經花了 ${expense}</Span>
-        <Span>我這個月還可以花 ${remain}</Span>
+        <Span>
+          這個月已經花了{" "}
+          <span style={{ fontSize: "1.1rem", fontWeight: "600" }}>
+            ${expense}
+          </span>
+        </Span>
+        {remain >= 0 ? (
+          <Span>
+            我這個月還可以花{" "}
+            <span style={{ fontSize: "1.1rem", fontWeight: "600" }}>
+              ${remain}
+            </span>
+          </Span>
+        ) : (
+          <Span>
+            <span style={{ fontSize: "1.1rem", color: "#d1726b" }}>
+              我這個月已經超過預算{" "}
+              <span style={{ fontSize: "1.1rem", fontWeight: "900" }}>
+                ${Math.abs(remain)}
+              </span>
+              ，不可以再花了！
+            </span>
+          </Span>
+        )}
       </ExpDiv>
+
+      <LabelDiv> 今年各類別花費</LabelDiv>
+      <ArrowDarkImg src={ArrowDark} alt="ArrowDarkImg" />
+
+      <LabelDiv2>今年總花費</LabelDiv2>
+      <ArrowImg src={Arrow} alt="ArrowImg" />
+
       <PieChartForm />
-    </BudgetSection>
+      <LineChartForm />
+    </BudgetContainer>
   );
 };
 

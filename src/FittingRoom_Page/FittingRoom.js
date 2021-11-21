@@ -1,165 +1,191 @@
 import React, { useState, useEffect, useRef } from "react";
-import Header from "../Landing_Page/Header";
 import styled from "styled-components";
-import "../CSS/FittingRoom.css";
+import "../CSS/common.css";
 import { fabric } from "fabric";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/auth";
+import Swal from "sweetalert2";
 import firebase from "../utils/firebase";
-import { useHistory } from "react-router-dom";
 import Popup from "reactjs-popup";
 import WebFont from "webfontloader";
+import TagAll from "./TagAll";
+import TagClothes from "./TagClothes";
+import TagPants from "./TagPants";
+import TagSkirt from "./TagSkirt";
+import TagShoes from "./TagShoes";
+import TagAccessary from "./TagAccessary";
+import Loading from "../CSS/LoadingCSS";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import {
+  YellowBG,
+  TagBox,
+  Tag,
+  Tag1,
+  Tag2,
+  Tag3,
+  Tag4,
+  Tag5,
+  Container,
+  AddBtn,
+  CanvasDiv,
+  Div,
+  LeftDiv,
+  Span,
+  MobileTagBox,
+} from "../CSS/FittingCSS";
 let movingImage;
 let filePath;
 
-const YellowBG = styled.div`
-  background-color: #f3d19e57;
-  position: absolute;
-  width: 100%;
-  height: 80%;
-  top: 120px;
-  z-index: -1;
-`;
-
-const Main = styled.div`
-  margin: 115px auto 20px auto;
-  max-width: 1200px;
-`;
-
-const Container = styled.div`
+const BtnDiv = styled.div`
   display: flex;
-  position: relative;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  margin-top: 90px;
+  border: 5px dashed #8f9fa357;
+  padding: 10px 20px;
 `;
 
-const AddBtn = styled.div`
-  background-color: #a9dbe596;
-  text-align: center;
-  line-height: 1.6em;
-  color: #31342d5c;
-  cursor: pointer;
-  border-radius: 50px;
-  margin: 8px auto 3px auto;
-  padding: 10px 18px;
-  font-size: 18px;
-  font-weight: 600;
-  position: absolute;
-  right: 32px;
-  bottom: 29px;
-  /* box-shadow: 1px -1px 10px 2px #91b8bdd6; */
+const Btn = styled.button`
+  padding: 5px 15px;
+  margin: auto 8px;
+  background-color: #88b0c347;
+  border-radius: 8px;
   &:hover {
-    transform: scale(1.2) !important;
-    background-color: #f3d5ca;
+    transform: scale(1.2);
+    background-color: #8ebed5e6;
+  }
+  &:hover :first-child {
+    position: absolute;
+    display: flex;
+    left: -85px;
+    top: -60px;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
-const CanvasDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+const ExplainSave = styled.div`
+  display: none;
+  width: 270px;
+  height: 40px;
+  border: 3px #88b0c347 solid;
+  border-radius: 9px;
+  background-color: snow;
+  padding: 5px 10px;
+`;
+
+const DeleteBtn = styled(Btn)`
+  position: relative;
+  background-color: #f1cdc5b3;
+  &:hover {
+    background-color: #f1cdc5;
+  }
+  &:hover :first-child {
+    position: absolute;
+    display: flex;
+    left: -25px;
+    top: -60px;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+const ExplainDelete = styled.div`
+  display: none;
+  width: 250px;
+  height: 40px;
+  border: 3px #e5a9aa96 solid;
+  border-radius: 9px;
+  background-color: snow;
+  padding: 5px 10px;
 `;
 
 const ClosetBox = styled.div`
-  margin: 30px auto;
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px;
+  margin: 30px 80px 20px 20px;
   background-color: white;
   box-shadow: 0px 2px 21px -2px rgba(182, 163, 163, 0.51);
   height: 630px;
   width: 800px;
-  position: absolute;
-  left: 450px;
+  position: relative;
   top: 10px;
+  @media screen and (max-width: 1400px) {
+    width: 700px;
+    margin: 25px 10px 20px 20px;
+  }
+  @media screen and (max-width: 1165px) {
+    width: 650px;
+    margin: 25px auto 20px 20px;
+  }
 `;
 
 const ImgsetBox = styled.div`
   padding-left: 60px;
-  padding-right: 60px;
+  padding-right: 30px;
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #fff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 3px solid #fff;
+  }
+  scrollbar-width: 5px;
+  scrollbar-color: #fff #fff;
   height: 100%;
+  @media screen and (max-width: 1400px) {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 `;
 
-const TagBox = styled.div`
+const ImgBox = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+`;
+
+const ClosetTitleDiv = styled.div`
+  font-weight: 800;
+  margin: 20px;
   position: absolute;
-  right: -55px;
-  top: 45px;
-`;
-
-const Tag = styled.div`
-  margin-bottom: 10px;
-  border-radius: 0 5px 5px 0;
-  background-color: #aab8bbb8;
-  padding: 4px 12px 4px 22px;
-  color: #4b4e47;
+  top: -50px;
+  left: 10px;
+  color: #515d6087;
+  padding: 8px 12px 8px 10px;
+  transform: rotate(-2.3deg);
   cursor: pointer;
-  opacity: 0.8;
-  font-size: 1rem;
-  z-index: 0;
-  &:hover {
-    opacity: 1;
-  }
+  z-index: 10;
+  background-color: #94c5d1bd;
 `;
 
-const Tag1 = styled(Tag)`
-  background-color: #e5daa9bf;
-  &:hover {
-    background-color: #e5daa9;
-  }
+const MirrorTitleDiv = styled(ClosetTitleDiv)`
+  background-color: #edc4b4c2;
+  transform: rotate(-2.3deg);
+  top: 45px;
+  left: 10px;
 `;
-
-const Tag2 = styled(Tag)`
-  background-color: #a9e5d996;
-  &:hover {
-    background-color: #a9e5d9;
-  }
-`;
-
-const Tag3 = styled(Tag)`
-  background-color: #e5a9aa96;
-  &:hover {
-    background-color: #e5a9aa;
-  }
-`;
-
-const Tag4 = styled(Tag)`
-  background-color: #a9dbe5bf;
-  &:hover {
-    background-color: #a9dbe5;
-  }
-`;
-
-const Tag5 = styled(Tag)`
-  background-color: #b5a8bdb8;
-  &:hover {
-    background-color: #b5a8bd;
-  }
-`;
-
-const ClosetTitleDiv = styled.div``;
 
 const ClosetTitle = styled.div`
-  margin-left: 70px;
   padding: 5px;
   border-radius: 5px;
 `;
 
 const ItemForm = styled.div`
   display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const SaveForm = styled.div`
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
 `;
 
 const Backdrop = styled.div`
@@ -178,19 +204,18 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: rgb(255, 255, 255);
-    width: 700px;
+    width: 580px;
     display: flex;
     height: 550px;
     border-radius: 25px;
   }
 `;
 
-const Div = styled.div`
-  margin: 5px auto;
-`;
-const Span = styled.span`
-  color: #3f484cc2;
-  font-weight: 500;
+const DairyPopup = styled(StyledPopup)`
+  &-content {
+    width: 350px;
+    height: 400px;
+  }
 `;
 
 const SaveBtn = styled.div`
@@ -209,17 +234,29 @@ const SaveBtn = styled.div`
   }
 `;
 
-const ImgDiv = styled.div`
-  height: 120px;
-  width: 120px;
-  margin: 30px;
+const Input = styled.input`
+  background-color: snow;
+  /* width: 100%; */
+  &:focus-visible {
+    outline: #e9c58eba 2px solid;
+  }
 `;
 
-const EmptyDiv = styled.div``;
+const InputNum = styled.input`
+  background-color: snow;
+  &:focus-visible {
+    outline: #e9c58eba 2px solid;
+  }
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+`;
 
 const FittingRoom = () => {
   const [account, setAccount] = useState("");
-  const history = useHistory();
   const [itemSize, setItemSize] = useState("");
   const [canvas, setCanvas] = useState({});
   const [price, setPrice] = useState(0);
@@ -227,12 +264,12 @@ const FittingRoom = () => {
   const [itemName, setItemName] = useState("");
   const [date, setDate] = useState("");
   const [imgFile, setImgFile] = useState("");
-  // const [imgURL, setImgURL] = useState("");
   const [diaryURL, setDiaryURL] = useState("");
-  const [renderItems, setRenderItems] = useState([]);
   const [isUser, setIsUser] = useState(null);
   const [outfitName, setOutfitName] = useState("");
   const [outfitSeason, setOutfitSeason] = useState("");
+  const [filerStatus, setFilterStatus] = useState("all");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setCanvas(initCanvas());
@@ -241,7 +278,7 @@ const FittingRoom = () => {
   useEffect(() => {
     WebFont.load({
       google: {
-        families: ["Droid Sans", "Chilanka"],
+        families: ["Chilanka", "Droid Sans"],
       },
     });
   }, []);
@@ -287,35 +324,25 @@ const FittingRoom = () => {
     };
   }, [isUser]);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    if (isUser !== null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(isUser.email)
-        .collection("items")
-        .orderBy("itemTime", "desc")
-        .onSnapshot((snapshot) => {
-          let arr = [];
-          snapshot.forEach((doc) => {
-            arr.push(doc.data().itemImg);
-          });
-          if (isMounted) {
-            setRenderItems(arr);
-          }
-        });
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [isUser]);
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+  console.log(date.toLocaleString());
 
   const summitItem = () => {
-    const YYYY = date.slice(0, 4);
-    const MM = date.slice(5, 7);
-    const DD = date.slice(8, 10);
+    setIsLoading(true);
+    const YYYY = date.toLocaleString().slice(0, 4);
+    const MM = date.toLocaleString().slice(5, 7);
+    const DD = date.toLocaleString().slice(8, 10);
+    console.log(YYYY, MM, DD);
     const item = firebase
       .firestore()
       .collection("users")
@@ -325,25 +352,50 @@ const FittingRoom = () => {
 
     // 透過 FileReader 將來讀取本地的圖片
     filePath = firebase.storage().ref("itemImages/" + item.id); //傳入filebase的路徑位置
-    const file = imgFile.target.files[0];
-    filePath.put(file, { contentType: file.type }).then(() => {
-      filePath.getDownloadURL().then((imageUrl) => {
-        item.set({
-          itemExpense: price,
-          itemName: itemName,
-          YYYY: YYYY,
-          MM: MM,
-          DD: DD,
-          itemImg: imageUrl,
-          itemTag: option,
-          itemSize: itemSize,
-          itemTime: firebase.firestore.Timestamp.now(),
-          owner: isUser.email,
-          name: account,
-          status: "none",
+
+    if (
+      imgFile === "" ||
+      itemName === "" ||
+      price === 0 ||
+      itemSize === "" ||
+      option === "" ||
+      date === ""
+    ) {
+      Toast.fire({
+        icon: "warning",
+        title: "記得將表單填寫完整唷！",
+      });
+    } else {
+      // const file = imgFile.target.files[0];
+
+      filePath.put(imgFile, { contentType: imgFile.type }).then(() => {
+        filePath.getDownloadURL().then((imageUrl) => {
+          item
+            .set({
+              itemExpense: price,
+              itemName: itemName,
+              YYYY: YYYY,
+              MM: MM,
+              DD: DD,
+              itemImg: imageUrl,
+              itemTag: option,
+              itemSize: itemSize,
+              itemTime: firebase.firestore.Timestamp.now(),
+              owner: isUser.email,
+              name: account,
+              status: "none",
+            })
+            .then(() => {
+              Toast.fire({
+                icon: "warning",
+                title: "新增成功!!",
+              });
+              setIsLoading(false);
+              console.log("success");
+            });
         });
       });
-    });
+    }
 
     //在獲取檔案之後，使用 FileReader 讀取檔案之後接著創造一個 Image，這樣我們就成功拿到選取的圖片資訊
     const newFileReader = new FileReader();
@@ -352,8 +404,8 @@ const FittingRoom = () => {
 
   const initCanvas = () =>
     new fabric.Canvas("canvas", {
-      height: 500,
-      width: 380,
+      height: 480,
+      width: 360,
     });
 
   const handleDelete = (e) => {
@@ -385,35 +437,45 @@ const FittingRoom = () => {
       ref.getDownloadURL().then((diaryUrl) => {
         setDiaryURL(diaryUrl);
 
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(isUser.email)
-          .collection("outfits")
-          .doc(item.id)
-          .set({
-            // itemExpense: price,     //總價？
-            outfitName: outfitName, //讓使用者取名？
-            outfitImg: diaryUrl,
-            outfitSeason: outfitSeason,
-            YYYY: new Date().getFullYear(),
-            MM: new Date().getMonth() + 1,
-            DD: new Date().getDate() + 1,
-            outfitTime: firebase.firestore.Timestamp.now(),
-            owner: isUser.email,
-            name: account,
-          });
+        if (outfitName === "" || outfitSeason === "") {
+          console.log(outfitName, outfitSeason);
 
-        console.log(new Date());
+          Toast.fire({
+            icon: "warning",
+            title: "記得替穿搭想個主題 ＆ 選取類別吧！",
+          });
+        } else {
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(isUser.email)
+            .collection("outfits")
+            .doc(item.id)
+            .set({
+              outfitName: outfitName,
+              outfitImg: diaryUrl,
+              outfitSeason: outfitSeason,
+              YYYY: new Date().getFullYear(),
+              MM: new Date().getMonth() + 1,
+              DD: new Date().getDate(),
+              outfitTime: firebase.firestore.Timestamp.now(),
+              owner: isUser.email,
+              name: account,
+            });
+          Toast.fire({
+            icon: "warning",
+            title: "儲存成功，快到穿搭日記看看吧！",
+          });
+        }
       });
     });
   };
 
-  const putId = (id) => document.getElementById(id);
-  const imageUploader = putId("imageUploader");
-  const imgset = putId("imgset");
-  const imgsetRef = useRef();
-  const defaultImg = putId("defaultImg");
+  // const putId = (id) => document.getElementById(id);
+  // const imageUploader = putId("imageUploader");
+  // const imgset = putId("imgset");
+  // const imgsetRef = useRef();
+  // const defaultImg = putId("defaultImg");
   let imgDragOffset = {
     offsetX: 0,
     offsetY: 0,
@@ -421,8 +483,6 @@ const FittingRoom = () => {
 
   // 在圖片發生 mousedown 事件時，將圖片儲存起來，並且記錄滑鼠點擊圖片的位置
   const saveImg = (e) => {
-    console.log("e.target", e.target);
-    console.log("e.target.tagName", e.target.tagName);
     if (e.target.tagName.toLowerCase() === "img") {
       imgDragOffset.offsetX = e.clientX - e.target.offsetLeft;
       imgDragOffset.offsetY = e.clientY - e.target.offsetTop;
@@ -434,172 +494,195 @@ const FittingRoom = () => {
   //設定 Fabricjs Drop 事件 canvas.on('drop', dropImg)，Drop 事件後，計算出正確的位置，最後使用 new fabric.Image 新增一張圖片
   function dropImg(e) {
     const { offsetX, offsetY } = e.e;
-    const image = new fabric.Image(
-      movingImage,
-      {
-        width: movingImage.naturalWidth,
-        height: movingImage.naturalHeight,
-        scaleX: 100 / movingImage.naturalWidth,
-        scaleY: 100 / movingImage.naturalHeight,
-        top: offsetY - imgDragOffset.offsetY,
-        left: offsetX - imgDragOffset.offsetX,
-      }
-      // { crossOrigin: "Anonymous" }
-    );
+    const image = new fabric.Image(movingImage, {
+      width: movingImage.naturalWidth,
+      height: movingImage.naturalHeight,
+      scaleX: 100 / movingImage.naturalWidth,
+      scaleY: 100 / movingImage.naturalHeight,
+      top: offsetY - imgDragOffset.offsetY,
+      left: offsetX - imgDragOffset.offsetX,
+    });
     canvas.add(image);
   }
 
-  return (
-    <div style={{ fontFamily: "Chilanka" }}>
-      <Header />
+  const previewUrl = imgFile
+    ? URL.createObjectURL(imgFile)
+    : "https://react.semantic-ui.com/images/wireframe/image.png";
 
-      <ButtonBox></ButtonBox>
+  return (
+    <div
+      style={{
+        fontFamily: "Chilanka",
+      }}
+    >
       <YellowBG />
 
-      <Main>
-        <Container>
-          <CanvasDiv>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <button type="submit" onClick={(e) => handleDelete(e)}>
-                Delete
-              </button>
-              <button onClick={(e) => handleBack(e)}>sendToBack</button>
+      <Container>
+        <MirrorTitleDiv>
+          <ClosetTitle>更衣室</ClosetTitle>
+        </MirrorTitleDiv>
+        <CanvasDiv>
+          <canvas id="canvas" onDrop={(e) => dropImg(e, saveImg())} />
+          <div style={{ marginTop: "80px", position: "relative" }}>
+            <BtnDiv>
+              <DeleteBtn type="submit" onClick={(e) => handleDelete(e)}>
+                刪除
+                <ExplainDelete>Tip: 記得先選取物件再按刪除唷！</ExplainDelete>
+              </DeleteBtn>
 
-              <StyledPopup modal trigger={<button>儲存</button>}>
+              <DairyPopup
+                modal
+                trigger={
+                  <Btn>
+                    儲存
+                    <ExplainSave>Tip: 儲存後可以在穿搭日記查詢唷！</ExplainSave>
+                  </Btn>
+                }
+              >
                 {(close) => (
                   <Backdrop>
-                    <ItemForm>
-                      <ImgDiv>
-                        <img
-                          src={diaryURL}
-                          alt="outfit item"
-                          style={{ height: "100%" }}
-                        />
-                      </ImgDiv>
-                      <Div>
+                    <SaveForm>
+                      <Div style={{ width: "100%" }}>
                         <Span>想個主題</Span>
-                        <input
+                        <Input
                           type="text"
                           value={outfitName}
                           onChange={(e) => setOutfitName(e.target.value)}
-                        ></input>
+                        ></Input>
                       </Div>
-                      <Div>
+                      <Div style={{ width: "100%" }}>
                         <Span>類別：</Span>
 
                         <select
                           value={outfitSeason}
                           onChange={(e) => setOutfitSeason(e.target.value)}
                         >
-                          <option value="selectSeason">適合季節</option>
+                          <option>適合季節</option>
                           <option value="spring">春天</option>
                           <option value="summer">夏天</option>
                           <option value="fall">秋天</option>
                           <option value="winter">冬天</option>
                         </select>
                       </Div>
-                      <Div>
-                        <SaveBtn
-                          onClick={(e) => {
-                            handleSave(e);
+                    </SaveForm>
+                    <div style={{ marginTop: "auto", marginBottom: "100px" }}>
+                      <SaveBtn
+                        onClick={(e) => {
+                          handleSave(e);
+                          if (outfitName !== "" && outfitSeason !== "") {
                             close();
-                          }}
-                        >
-                          好了
-                        </SaveBtn>
-                      </Div>
-                    </ItemForm>
+                          }
+                        }}
+                      >
+                        好了
+                      </SaveBtn>
+                    </div>
                   </Backdrop>
                 )}
-              </StyledPopup>
-            </div>
-            <canvas id="canvas" onDrop={(e) => dropImg(e, saveImg())} />
-          </CanvasDiv>
+              </DairyPopup>
+            </BtnDiv>
+          </div>
+        </CanvasDiv>
+
+        <ClosetBox>
           <ClosetTitleDiv>
-            {/* <ClosetTitle>衣櫥</ClosetTitle> */}
+            <ClosetTitle>我の衣櫥</ClosetTitle>
           </ClosetTitleDiv>
-          <ClosetBox>
-            <ImgsetBox>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-                id="imgset"
-                onMouseDown={(e) => saveImg(e)}
-              >
-                {renderItems.length === 0 ? (
-                  <EmptyDiv>
-                    {" "}
-                    現在衣櫥是空的唷！ 點擊＋號，一起來更衣吧！！
-                  </EmptyDiv>
-                ) : (
-                  renderItems.map((url, index) => (
-                    <img
-                      key={index}
-                      src={url}
-                      alt="clothes"
-                      crossOrigin="anonymous"
-                      style={{
-                        maxHeight: "160px",
-                        margin: "20px",
-                        cursor: "grab",
-                      }}
-                    />
-                  ))
-                )}
+          <ImgsetBox>
+            {isLoading ? (
+              <div style={{ width: "150px" }}>
+                <Loading />
               </div>
+            ) : null}
+            <ImgBox id="imgset" onMouseDown={(e) => saveImg(e)}>
+              {filerStatus === "all" ? <TagAll /> : <></>}
+              {filerStatus === "clothes" ? <TagClothes /> : <></>}
+              {filerStatus === "pants" ? <TagPants /> : <></>}
+              {filerStatus === "skirt" ? <TagSkirt /> : <></>}
+              {filerStatus === "shoes" ? <TagShoes /> : <></>}
+              {filerStatus === "accessary" ? <TagAccessary /> : <></>}
+            </ImgBox>
 
-              <StyledPopup modal trigger={<AddBtn>+</AddBtn>}>
-                {(close) => (
-                  <Backdrop>
-                    <ItemForm>
-                      <div style={{ display: "flex" }}>
-                        <Div>
-                          <Span>類別：</Span>
+            <StyledPopup modal trigger={<AddBtn>+</AddBtn>}>
+              {(close) => (
+                <Backdrop>
+                  <ItemForm>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "140px",
+                      }}
+                    >
+                      <LeftDiv
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
+                        <label htmlFor="file">
+                          <img
+                            src={previewUrl}
+                            alt="uploadImg"
+                            style={{
+                              height: "120px",
+                              borderRadius: "5px",
+                            }}
+                          />
+                        </label>
 
-                          <select
-                            value={option}
-                            onChange={(e) => setOption(e.target.value)}
-                          >
-                            <option value="selectTag">選一個</option>
-                            <option value="clothes">上衣</option>
-                            <option value="pants">褲子</option>
-                            <option value="shoses">裙子</option>
-                            <option value="hats">鞋子</option>
-                            <option value="accessaries">配件</option>
-                          </select>
-                        </Div>
+                        <Input
+                          style={{ display: "none" }}
+                          type="file"
+                          id="file"
+                          onChange={(e) => setImgFile(e.target.files[0])}
+                        />
+                      </LeftDiv>
+                      <LeftDiv>
+                        <Span>類別：</Span>
 
-                        <Div>
-                          <Span>尺寸：</Span>
+                        <select
+                          value={option}
+                          onChange={(e) => setOption(e.target.value)}
+                        >
+                          <option>選一個</option>
+                          <option value="clothes">上衣</option>
+                          <option value="pants">褲子</option>
+                          <option value="skirt">裙子</option>
+                          <option value="shoes">鞋子</option>
+                          <option value="accessary">配件</option>
+                        </select>
+                      </LeftDiv>
 
-                          <select
-                            value={itemSize}
-                            onChange={(e) => setItemSize(e.target.value)}
-                          >
-                            <option value="selectTag">選一個</option>
-                            <option value="XXS">XXS</option>
-                            <option value="XS">XS</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                          </select>
-                        </Div>
-                      </div>
+                      <LeftDiv>
+                        <Span>尺寸：</Span>
+
+                        <select
+                          value={itemSize}
+                          onChange={(e) => setItemSize(e.target.value)}
+                        >
+                          <option>選一個</option>
+                          <option value="XXS">XXS</option>
+                          <option value="XS">XS</option>
+                          <option value="S">S</option>
+                          <option value="M">M</option>
+                          <option value="L">L</option>
+                          <option value="XL">XL</option>
+                          <option value="XXL">XXL</option>
+                        </select>
+                      </LeftDiv>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "250px",
+                      }}
+                    >
                       <Div>
                         <Span>服裝名稱：</Span>
-                        <input
+                        <Input
                           type="text"
                           value={itemName}
                           onChange={(e) => setItemName(e.target.value)}
@@ -607,8 +690,10 @@ const FittingRoom = () => {
                       </Div>
                       <Div>
                         <Span>購買金額：</Span>
-                        <input
+                        <InputNum
+                          style={{ "-webkit-appearance": "none" }}
                           type="number"
+                          placeholder="記得輸入金額唷！"
                           value={price}
                           onChange={(e) => {
                             setPrice(Number(e.target.value));
@@ -616,63 +701,103 @@ const FittingRoom = () => {
                           }}
                         />
                       </Div>
-                      <Div>
+                      <Div
+                      // style={{
+                      //   borderTop: "dashed 3px #f3d19efa",
+                      //   paddingTop: "6px",
+                      // }}
+                      >
                         <Span>購買日期：</Span>
+
                         <input
-                          className="date"
+                          style={{ backgroundColor: "snow" }}
                           type="date"
+                          selected={date}
                           onChange={(e) => setDate(e.target.value)}
                         />
+
+                        {/* <DatePicker
+                          dateFormat="yyyy/MM/dd"
+                          selected={date}
+                          onChange={(e) => setDate(e)}
+                          maxDate={new Date()}
+                        /> */}
                       </Div>
-                      <Div>
-                        <input
-                          type="file"
-                          id="file"
-                          onChange={(e) => setImgFile(e)}
-                          placeholder="選擇一件"
-                        />
-                      </Div>
-                      <Div>
-                        <SaveBtn
-                          type="submit"
-                          onClick={(e) => {
-                            summitItem(e);
-                            close();
-                          }}
-                        >
-                          好了
-                        </SaveBtn>
-                      </Div>
-                    </ItemForm>
-                  </Backdrop>
-                )}
-              </StyledPopup>
-            </ImgsetBox>
-            <TagBox>
-              <Tag>全部</Tag>
-              <Tag1>上衣</Tag1>
-              <Tag2>褲子</Tag2>
-              <Tag3>裙子</Tag3>
-              <Tag4>鞋子</Tag4>
-              <Tag5>配件</Tag5>
-            </TagBox>
-          </ClosetBox>
-        </Container>
-      </Main>
+                    </div>
+                  </ItemForm>
+                  <div style={{ marginTop: "auto", marginBottom: "100px" }}>
+                    <SaveBtn
+                      type="submit"
+                      onClick={(e) => {
+                        summitItem(e);
+                        if (
+                          imgFile !== "" &&
+                          itemName !== "" &&
+                          price !== 0 &&
+                          itemSize !== "" &&
+                          option !== "" &&
+                          date !== ""
+                        ) {
+                          close();
+                        }
+                      }}
+                    >
+                      好了
+                    </SaveBtn>
+                  </div>
+                </Backdrop>
+              )}
+            </StyledPopup>
+          </ImgsetBox>
+          <TagBox>
+            <Tag
+              onClick={() => {
+                setFilterStatus("all");
+              }}
+            >
+              全部
+            </Tag>
+            <Tag1
+              onClick={() => {
+                setFilterStatus("clothes");
+              }}
+            >
+              上衣
+            </Tag1>
+            <Tag2
+              onClick={() => {
+                setFilterStatus("pants");
+              }}
+            >
+              褲子
+            </Tag2>
+            <Tag3
+              onClick={() => {
+                setFilterStatus("skirt");
+              }}
+            >
+              裙子
+            </Tag3>
+            <Tag4
+              onClick={() => {
+                setFilterStatus("shoes");
+              }}
+            >
+              鞋子
+            </Tag4>
+            <Tag5
+              onClick={() => {
+                setFilterStatus("accessary");
+              }}
+            >
+              配件
+            </Tag5>
+            <MobileTagBox />
+          </TagBox>
+        </ClosetBox>
+      </Container>
     </div>
   );
 };
-
-{
-  /* <ImgDiv
-  key={index}
-  style={{
-    backgroundImage: `url(${url})`,
-    backgroundPosition: "center",
-    backgroundSize: "contain",
-    backgroundRepeat: "no-repeat",
-  }}
-/>  */
-}
 
 export default FittingRoom;

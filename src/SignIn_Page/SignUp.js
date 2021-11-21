@@ -156,6 +156,8 @@ const SignUp = ({ close }) => {
       name: name,
       email: email,
       password: password,
+      budget: 0,
+      remaining: 0,
     });
   };
 
@@ -164,7 +166,7 @@ const SignUp = ({ close }) => {
       <Form>
         <HeaderSignin>Create Account</HeaderSignin>
         <SocialContainer>
-          <SocialA href="#">
+          {/* <SocialA href="#">
             <FontAwesomeIcon
               icon={faFacebook}
               style={{ color: "#70604c" }}
@@ -178,7 +180,7 @@ const SignUp = ({ close }) => {
               style={{ color: "#70604c" }}
               onClick={() => handleSocialMedia(googleProvider)}
             />
-          </SocialA>
+          </SocialA> */}
         </SocialContainer>
         <Span>or use your email for registration</Span>
         <Input

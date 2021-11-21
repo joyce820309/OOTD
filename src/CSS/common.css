@@ -1,0 +1,106 @@
+#canvas {
+  margin: 60px 30px 30px 0px;
+  border-radius: 15px;
+  box-shadow: 10px 2px 26px 2px rgba(77, 69, 69, 0.51);
+  background-color: white;
+  /* z-index: 1999; */
+}
+
+@media screen and (max-width: 1400px) {
+  .canvas-container {
+    width: 350px !important;
+    height: 480px;
+  }
+}
+
+button {
+  color: #31342d5c;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #d4e4eb;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0 auto;
+  font-size: 13px;
+  font-weight: 900;
+  border-radius: 15px;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button:focus {
+  transform: scale(1.08);
+}
+
+input {
+  display: block;
+  /* width: 100%; */
+  margin: 7px auto;
+  color: grey;
+  border-radius: 10px;
+  border: none;
+  height: 30px;
+  background-color: #cddbe16e;
+}
+
+input:focus-visible {
+  outline: #6da2b97d 2px solid;
+  color: gray;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  margin: 7px auto;
+  color: grey;
+  border-radius: 10px;
+  border: none;
+  height: 30px;
+}
+
+textarea:focus-visible {
+  outline: #e9c58eba 2px solid;
+  color: gray;
+}
+
+label {
+  width: 110%;
+  height: 100%;
+  background-color: #f3d19efa;
+  color: gray;
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+select {
+  margin-left: 8px;
+  width: 52%;
+  color: grey;
+  border-radius: 6px;
+  border: rgb(189, 189, 207) 1px solid;
+}
+
+select:focus-visible {
+  outline: 1px solid #e9c58eba;
+}
+
+option {
+  background-color: snow;
+  color: aqua;
+}
+
+.recharts-responsive-container {
+  margin-top: -200px;
+}
+
+/* FOR Canlender */
+.react-datepicker__day--selected {
+  background-color: #f3d19efa;
+  border-radius: 50px;
+}

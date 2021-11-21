@@ -132,23 +132,21 @@ const SignIn = () => {
       <Form>
         <HeaderSignin>Sign in</HeaderSignin>
         <SocialContainer>
-          <SocialA href="#">
+          {/* <SocialA href="#">
             <FontAwesomeIcon
               style={{ color: "#70604c" }}
               icon={faFacebook}
               onClick={() => handleSocialMedia(facebookProvider)}
             />
-          </SocialA>
+          </SocialA> */}
 
-          <SocialA href="#">
+          {/* <SocialA href="#">
             <FontAwesomeIcon
               style={{ color: "#70604c" }}
-              // onMouseOver='this.style.color="#ed8f03"'
-              // onMouseOut='this.style.color="#70604c"'
               icon={faGoogle}
               onClick={() => handleSocialMedia(googleProvider)}
             />
-          </SocialA>
+          </SocialA> */}
         </SocialContainer>
         <Input
           type="email"

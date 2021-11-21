@@ -1,66 +1,117 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState, useCallback } from "react";
 import firebase from "../utils/firebase";
 import "firebase/firestore";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import Popup from "reactjs-popup";
-import WebFont from "webfontloader";
+import "../CSS/common.css";
+import {
+  PieChart,
+  Pie,
+  Sector,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 import "firebase/auth";
 
 const PieChartForm = () => {
-  const data = [
-    { name: "Budget", value: 400 },
-    { name: "Expense", value: 600 },
-    { name: "Group C", value: 500 },
-  ];
+  const [isUser, setIsUser] = useState(null);
+  const [piedata, setPieData] = useState([]);
+  let expenseArr = [];
 
-  const COLORS = ["#e6e5eo", "#c5beb6", "#9eb39c"];
+  const date = new Date().toLocaleString().slice(0, 4);
 
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setIsUser(user);
+      }
+    });
+  }, [isUser]);
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isUser !== null) {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(isUser.email)
+        .collection("items")
+        .onSnapshot((snapshot) => {
+          const data = snapshot.docs
+            .map((doc) => {
+              return doc.data();
+            })
+            .filter((doc) => doc.YYYY === date && doc.itemExpense);
+
+          let total = 0;
+
+          const month = ["clothes", "pants", "skirt", "shoes", "accessary"];
+          month.map((item) => {
+            let expense = 0;
+            data
+              .filter((doc) => doc.itemTag === item)
+              .forEach((data) => {
+                total = expense += data.itemExpense;
+              });
+            return expenseArr.push(total);
+            // return expenseArr.push(data);
+          });
+
+          console.log(expenseArr);
+
+          if (isMounted) {
+            let dataArr = [];
+            let name = ["上衣", "褲子", "裙子", "鞋子", "配件"];
+            console.log(expenseArr);
+            for (let i = 0; i < 5; i++) {
+              let d = {
+                name: name[i],
+                value: expenseArr[i],
+              };
+              dataArr.push(d);
+            }
+            console.log(dataArr);
+            setPieData(dataArr);
+          }
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [isUser]);
+
+  const COLORS = ["#a5c2c9", "#edc4b4", "#ebc382", "#9acb9c", "#c5bad9"];
+
   return (
-    <ResponsiveContainer width="100%" height="1000px">
-      <PieChart width={400} height={400}>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
+    // <ResponsiveContainer width="50%" height="50%">
+    <PieChart
+      width={400}
+      height={500}
+      margin={{
+        top: 125,
+        right: 140,
+        left: 0,
+        bottom: 10,
+      }}
+    >
+      <Pie
+        dataKey="value"
+        isAnimationActive={false}
+        data={piedata}
+        cx={200}
+        cy={200}
+        outerRadius={105}
+        fill="#8884d8"
+        label
+      >
+        {piedata.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+        {/* <text fill="white" dominantBaseline="central"></text> */}
+      </Pie>
+      <Tooltip />
+    </PieChart>
+    // </ResponsiveContainer>
   );
 };
 
