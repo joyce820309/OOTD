@@ -1,6 +1,6 @@
 # OOTD- Outfit Of The Day
 
-## <img src="./build/OOTDicon.png" width=22/> Website Link
+## <img src="./src/img/OOTDicon.png" width=22/> Website Link
 
 - **Website Link :** https://side-project-d1344.web.app/
 
@@ -11,7 +11,7 @@ You can also create your own native account <br />
   account: test@test.com<br />
   password: test123
 
-## <img src="./build/OOTDicon.png" width=22/> Techniques
+## <img src="./src/img/OOTDicon.png" width=22/> Techniques
 
 ### Front-End Fundamental
 
@@ -52,11 +52,11 @@ You can also create your own native account <br />
 - Version Control : Git / GitHub
 - Unit Test: Jest
 
-## <img src="./build/OOTDicon.png" width=22/> Flow Chart
+## <img src="./src/img/OOTDicon.png" width=22/> Flow Chart
 
 <img src="./src/img/userflow.png" width=100%/>
 
-## <img src="./build/OOTDicon.png" width=22/> Features Demo
+## <img src="./src/img/OOTDicon.png" width=22/> Features Demo
 
 - Upload user's clothes in the closet
   <br />
@@ -73,11 +73,11 @@ You can also create your own native account <br />
 
 <img src="./src/img/exchange.gif" width=100%/>
 
-## <img src="./build/OOTDicon.png" width=22/> Future Features
+## <img src="./src/img/OOTDicon.png" width=22/> Future Features
 
 - Build Chat Room to let users connect with each other and make sure contact infomation before exchange clothes
 
-## <img src="./build/OOTDicon.png" width=22/> Contact
+## <img src="./src/img/OOTDicon.png" width=22/> Contact
 
 **Author:** Joyce Weng <br />
 **Email:** joyce820309@gmail.com
