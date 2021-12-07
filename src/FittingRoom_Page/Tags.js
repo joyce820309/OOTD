@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "firebase/firestore";
 import firebase from "../utils/firebase";
-import { EmptyDiv, TagContainer, ImgDiv, LoadingDiv } from "../CSS/FittingCSS";
-import Loading from "../CSS/LoadingCSS";
+import {
+  EmptyDiv,
+  TagContainer,
+  ImgDiv,
+  LoadingDiv,
+} from "../Style/FittingCSS";
+import Loading from "../General/Loading";
+import { useSelector } from "react-redux";
 
-const TagPants = () => {
-  const [isUser, setIsUser] = useState(null);
-  const [renderAccessary, setRenderAccessary] = useState([]);
+const Tags = ({ tag }) => {
+  const isUser = useSelector((state) => state.user);
+  const [renderClothes, setRenderClothes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-      }
-    });
-  }, [isUser]);
 
   useEffect(() => {
     let isMounted = true;
@@ -32,11 +30,9 @@ const TagPants = () => {
             .map((doc) => {
               return doc.data();
             })
-            .filter((data) => data.itemTag === "accessary");
-          console.log("OMG", data);
-
+            .filter((data) => data.itemTag === tag);
           if (isMounted) {
-            setRenderAccessary(data);
+            setRenderClothes(data);
             setIsLoading(false);
           }
         });
@@ -54,15 +50,15 @@ const TagPants = () => {
         </LoadingDiv>
       ) : (
         <>
-          {renderAccessary.length === 0 ? (
+          {renderClothes.length === 0 ? (
             <TagContainer>
               <EmptyDiv>
                 {" "}
-                衣櫥裡現在搜尋不到『配件』唷！ 點擊＋號，一起來穿搭吧！！
+                這個分類現在空空的唷！ 點擊＋號，一起來穿搭吧！！
               </EmptyDiv>
             </TagContainer>
           ) : (
-            renderAccessary.map((data, index) => (
+            renderClothes.map((data, index) => (
               <ImgDiv>
                 {" "}
                 <img
@@ -85,4 +81,4 @@ const TagPants = () => {
   );
 };
 
-export default TagPants;
+export default Tags;

@@ -1,26 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Pic from "../img/Pic.png";
 import firebase from "../utils/firebase";
-import Popup from "reactjs-popup";
-import WebFont from "webfontloader";
-import "firebase/auth";
-import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Expense from "./Expense";
 import MyCloset from "./Closet";
 import Exchange from "./Exchange";
-
-// const Main = styled.div`
-//   display: flex;
-//   justify-content: space-around;
-//   margin: 115px 30px 0 30px;
-//   @media screen and (max-width: 1250px) {
-//     /* flex-direction: column;
-//     align-items: center; */
-//   }
-// `;
+import NotFound from "../General/NotFound";
+import { EmptyContainer } from "../Style/PersonalCSS";
 
 const BigDiv = styled.div`
   display: flex;
@@ -35,6 +24,9 @@ const Container = styled.div`
   flex-direction: column;
   width: 900px;
   height: 830px;
+  @media screen and (max-width: 1440px) {
+    height: 540px;
+  }
 `;
 
 const Title = styled(Link)`
@@ -117,27 +109,11 @@ const UserInfo = styled.div`
 `;
 
 const Personal = () => {
+  const isUser = useSelector((state) => state.user);
   const [userName, setUserName] = useState("");
   const [userEmail, setUseremail] = useState("");
   const history = useHistory();
-  const [isUser, setIsUser] = useState(null);
   const [btnStatus, setBtnStatus] = useState("closetDiv");
-
-  useEffect(() => {
-    WebFont.load({
-      google: {
-        families: ["Droid Sans", "Chilanka"],
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -149,8 +125,8 @@ const Personal = () => {
         .get()
         .then((doc) => {
           if (isMounted) {
-            setUserName(doc.data().name);
-            setUseremail(doc.data().email);
+            setUserName(doc.data()?.name);
+            setUseremail(doc.data()?.email);
           }
         });
     }
@@ -169,7 +145,7 @@ const Personal = () => {
   };
 
   return (
-    <div style={{ fontFamily: "Chilanka" }}>
+    <div>
       <BigDiv>
         <ProfileDiv>
           <ProfileImg>
@@ -221,6 +197,11 @@ const Personal = () => {
             </Route>
             <Route path="/Personal/myexpense" exact>
               <Expense />
+            </Route>
+            <Route path="">
+              <EmptyContainer>
+                <NotFound />
+              </EmptyContainer>
             </Route>
           </Switch>
         </Container>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import firebase from "../utils/firebase";
 import WebFont from "webfontloader";
-import CountUp from "react-countup";
+// import CountUp from "react-countup";
 
 import "firebase/auth";
 
@@ -10,13 +10,11 @@ const Container = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  height: 50%;
+  height: 30%;
   margin: 5px auto;
-  /* outline: 3px solid steelblue; */
 `;
 const TotalDiv = styled.div`
   width: 23%;
-  height: 40%;
   background-color: #fffafab5;
   border-radius: 5px;
   position: relative;

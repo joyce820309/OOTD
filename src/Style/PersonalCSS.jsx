@@ -6,9 +6,9 @@ const ClosetContainer = styled.div`
   flex-wrap: wrap;
   height: 720px;
   padding: 15px;
-  background-color: #cfdee1;
   overflow-y: scroll;
   z-index: 5;
+  background-color: #cfdee1;
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -21,12 +21,31 @@ const ClosetContainer = styled.div`
   }
   scrollbar-width: 5px;
   scrollbar-color: #cfdee1 #cfdee1;
+  @media screen and (max-width: 1440px) {
+    height: 540px;
+  }
   @media screen and (max-width: 900px) {
     justify-content: space-evenly;
   }
 `;
 
-const ClosetItem = styled.div`
+const ExchangeContainer = styled(ClosetContainer)`
+  background-color: #fbeae3;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #fbeae3;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 3px solid #fbeae3;
+  }
+  scrollbar-width: 5px;
+  scrollbar-color: #fbeae3 #fbeae3;
+`;
+
+const EachDiv = styled.div`
   box-shadow: 0 1px 8px 0 rgb(34 36 38 / 18%);
   width: 20%;
   height: 30%;
@@ -38,16 +57,13 @@ const ClosetItem = styled.div`
   background: white;
   padding: 10px;
   position: relative;
-  @media screen and (max-width: 1200px) {
-    width: 25%;
-    height: 25%;
+  @media screen and (max-width: 1440px) {
+    height: initial;
   }
-  @media screen and (max-width: 900px) {
-    height: 30%;
+  @media screen and (max-width: 1040px) {
     width: 35%;
   }
   @media screen and (max-width: 750px) {
-    height: 25%;
     width: 40%;
   }
   @media screen and (max-width: 720px) {
@@ -198,7 +214,8 @@ const EmptyContainer = styled.div`
 export {
   EmptyContainer,
   ClosetContainer,
-  ClosetItem,
+  ExchangeContainer,
+  EachDiv,
   PendingDiv,
   DoneDiv,
   NewHomeBtn,

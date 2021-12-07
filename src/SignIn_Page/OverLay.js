@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 // import ReactDOM from "react-dom";
 import styled from "styled-components";
-import "../CSS/SignIn.css";
+import "../Style/SignIn.css";
 import WebFont from "webfontloader";
 
 const OverlayContainer = styled.div`

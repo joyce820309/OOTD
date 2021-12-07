@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import firebase from "../utils/firebase";
 import Popup from "reactjs-popup";
-import WebFont from "webfontloader";
-import Loading from "../CSS/LoadingCSS";
+import Loading from "../General/Loading";
 import "firebase/firestore";
 import Swal from "sweetalert2";
+import { EmptyDiv } from "../Style/FittingCSS";
+import { useSelector } from "react-redux";
+import {
+  setIntoOutfitCollection,
+  deleteDairyItem,
+} from "../utils/firebaseFunc";
 
 const StyledPopup = styled(Popup)`
   &-overlay {
@@ -44,7 +48,16 @@ const DeleteBtn = styled.div`
   }
 `;
 
+const EmptyContainer = styled.div`
+  width: 100%;
+  padding-top: 60px;
+  display: flex;
+  justify-content: center;
+`;
+
 const Container = styled.div`
+  /* width: 100%; */
+
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 40px 40px;
@@ -113,8 +126,6 @@ const Content = styled.span`
   font-size: 0.9rem;
   display: flex;
   flex-direction: column-reverse;
-  /* background-color: #e5c07366;
-  border-radius: 8px; */
 `;
 
 const ItemDiv = styled.div`
@@ -142,49 +153,21 @@ const Text = styled.div`
 `;
 
 const Diary = () => {
-  const [isUser, setIsUser] = useState(null);
+  const isUser = useSelector((state) => state.user);
   const [outfitCollection, setOutfitCollection] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log(loading);
 
   useEffect(() => {
-    WebFont.load({
-      google: {
-        families: ["Droid Sans", "Chilanka"],
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-        // setLoading(false);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
+    let unsubscribe;
     if (isUser !== null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(isUser.email)
-        .collection("outfits")
-        .orderBy("outfitTime", "desc")
-        .onSnapshot((snapshot) => {
-          const data = snapshot.docs.map((doc) => {
-            return { data: doc.data(), id: doc.id };
-          });
-          if (isMounted) {
-            setOutfitCollection(data);
-            setLoading(false);
-          }
-        });
+      unsubscribe = setIntoOutfitCollection(
+        isUser,
+        setLoading,
+        setOutfitCollection
+      );
     }
     return () => {
-      isMounted = false;
+      unsubscribe && unsubscribe();
     };
   }, [isUser]);
 
@@ -200,34 +183,9 @@ const Diary = () => {
     },
   });
 
-  const deleteItem = (outfits, id) => {
-    const item = firebase
-      .firestore()
-      .collection("users")
-      .doc(isUser.email)
-      .collection("outfits")
-      .doc(id);
-
-    item.delete().then(() => {
-      let ref = firebase.storage().ref("diaryImages/" + item.id);
-      ref
-        .delete()
-        .then(() => {
-          Toast.fire({
-            icon: "warning",
-            title: "刪除成功!!",
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    });
-  };
-
   return (
     <div
       style={{
-        fontFamily: "Chilanka",
         margin: "110px auto",
         height: "100%",
       }}
@@ -239,70 +197,84 @@ const Diary = () => {
           <Loading />
         </div>
       ) : (
-        <Container>
-          {outfitCollection.map((outfit, e) => (
-            <EachBox key={e}>
-              <DeleteBtn
-                onClick={() => {
-                  deleteItem(outfit, outfit.id);
+        <>
+          {outfitCollection.length === 0 ? (
+            <EmptyContainer>
+              <EmptyDiv
+                style={{
+                  padding: "13px",
+                  borderBottom: "0.6rem #bdc5c9 solid",
+                  fontSize: "1.6rem",
                 }}
               >
-                X
-              </DeleteBtn>
+                還沒有搭配過衣服唷！快前往更衣室穿搭吧！
+              </EmptyDiv>
+            </EmptyContainer>
+          ) : (
+            <Container>
+              {outfitCollection.map((outfit, e) => (
+                <EachBox key={e}>
+                  <DeleteBtn
+                    onClick={() => {
+                      deleteDairyItem(outfit, outfit.id, isUser, Toast);
+                    }}
+                  >
+                    X
+                  </DeleteBtn>
 
-              <StyledPopup
-                modal
-                trigger={
-                  <ImgBox>
-                    <Img
-                      src={outfit.data.outfitImg}
-                      alt="outfitImg"
-                      style={{ maxWidth: "100%", height: "100%" }}
-                    />
-                  </ImgBox>
-                }
-              >
-                {(close) => (
-                  <Backdrop>
-                    <ItemDiv
-                      style={{
-                        fontFamily: "Chilanka",
-                      }}
-                    >
-                      <ContentImg>
-                        <img
+                  <StyledPopup
+                    modal
+                    trigger={
+                      <ImgBox>
+                        <Img
                           src={outfit.data.outfitImg}
                           alt="outfitImg"
-                          style={{ maxWidth: "100%", maxHeight: "100%" }}
+                          style={{ maxWidth: "100%", height: "100%" }}
                         />
-                      </ContentImg>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "flex-start",
-                        }}
-                      >
-                        <div style={{ display: "flex", marginBottom: "9px" }}>
-                          <ContentTitle>穿搭主題：</ContentTitle>
-                          <Content>{outfit.data.outfitName}</Content>
-                        </div>
-                        <div style={{ display: "flex" }}>
-                          <ContentTitle>穿搭季節：</ContentTitle>
-                          <Content>{outfit.data.outfitSeason}</Content>
-                        </div>
-                      </div>
-                    </ItemDiv>
-                  </Backdrop>
-                )}
-              </StyledPopup>
+                      </ImgBox>
+                    }
+                  >
+                    {(close) => (
+                      <Backdrop>
+                        <ItemDiv>
+                          <ContentImg>
+                            <img
+                              src={outfit.data.outfitImg}
+                              alt="outfitImg"
+                              style={{ maxWidth: "100%", maxHeight: "100%" }}
+                            />
+                          </ContentImg>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "flex-start",
+                            }}
+                          >
+                            <div
+                              style={{ display: "flex", marginBottom: "9px" }}
+                            >
+                              <ContentTitle>穿搭主題：</ContentTitle>
+                              <Content>{outfit.data.outfitName}</Content>
+                            </div>
+                            <div style={{ display: "flex" }}>
+                              <ContentTitle>穿搭季節：</ContentTitle>
+                              <Content>{outfit.data.outfitSeason}</Content>
+                            </div>
+                          </div>
+                        </ItemDiv>
+                      </Backdrop>
+                    )}
+                  </StyledPopup>
 
-              <Text>
-                {outfit.data.YYYY}年{outfit.data.MM}月{outfit.data.DD}日
-              </Text>
-            </EachBox>
-          ))}
-        </Container>
+                  <Text>
+                    {outfit.data.YYYY}年{outfit.data.MM}月{outfit.data.DD}日
+                  </Text>
+                </EachBox>
+              ))}
+            </Container>
+          )}
+        </>
       )}
     </div>
   );

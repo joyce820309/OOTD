@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import firebase from "../utils/firebase";
 import Popup from "reactjs-popup";
-import WebFont from "webfontloader";
-import "firebase/auth";
-import { Div, Span, DeleteBtn } from "../CSS/CommonCSS";
-import { ItemInfo, ImgDiv } from "../CSS/PopupCSS";
+import { useSelector } from "react-redux";
+import { Div, Span, DeleteBtn } from "../Style/CommonCSS";
+import { ItemInfo, ImgDiv } from "../Style/PopupCSS";
 import Swal from "sweetalert2";
-import { EmptyDiv } from "../CSS/FittingCSS";
+import { EmptyDiv } from "../Style/FittingCSS";
+import { EachDiv, ExchangeContainer } from "../Style/PersonalCSS";
+import {
+  getAllItemCollection,
+  getOthersItem,
+  deleteExchangeItem,
+} from "../utils/firebaseFunc";
 
 const EmptyContainer = styled.div`
   width: 100%;
@@ -16,56 +20,10 @@ const EmptyContainer = styled.div`
   justify-content: center;
 `;
 
-const ExchangeContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  max-height: 720px;
-  padding: 15px;
-  overflow-y: scroll;
-  background-color: #fbeae3;
-  z-index: 5;
-  height: 720px;
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #fbeae3;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border: 3px solid #fbeae3;
-  }
-  scrollbar-width: 5px;
-  scrollbar-color: #fbeae3 #fbeae3;
-  @media screen and (max-width: 1250px) {
-    width: 575px;
-  }
-`;
-
-const EachDiv = styled.div`
-  box-shadow: 0 1px 8px 0 rgb(34 36 38 / 18%);
-  width: 20%;
-  height: 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 20px;
-  background: white;
-  padding: 10px;
-  position: relative;
-  cursor: pointer;
-  @media screen and (max-width: 1200px) {
-    width: 30%;
-  }
-`;
-
 const ExchangeItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   margin: 18px 10px;
   padding: 10px;
 `;
@@ -93,23 +51,6 @@ const Backdrop = styled.div`
   border-radius: 25px;
 `;
 
-const NameBtn = styled.div`
-  background-color: #f3d5ca;
-  text-align: center;
-  line-height: 1.6em;
-  color: #31342d5c;
-  cursor: pointer;
-  width: 43% !important;
-  margin: 0 auto;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  margin-bottom: 5px;
-  &:hover {
-    transform: scale(1.2) !important;
-  }
-`;
-
 const ItemDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -118,96 +59,27 @@ const ItemDiv = styled.div`
 `;
 
 const Exchange = () => {
-  const [isUser, setIsUser] = useState(null);
+  const isUser = useSelector((state) => state.user);
   const [allItems, setAllItems] = useState([]);
-  const [itemsCollection, setItemsCollection] = useState([]);
   const [exchangeDone, setExchangeDone] = useState([]);
 
   useEffect(() => {
-    WebFont.load({
-      google: {
-        families: ["Droid Sans", "Chilanka"],
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
+    let unsubscribe;
     if (isUser !== null) {
-      firebase
-        .firestore()
-        .collectionGroup("items")
-        .onSnapshot((snapshot) => {
-          const data = snapshot.docs.map((doc) => {
-            return doc.data();
-          });
-
-          if (isMounted) {
-            setAllItems(data);
-          }
-        });
+      unsubscribe = getAllItemCollection(setAllItems);
     }
     return () => {
-      isMounted = false;
+      unsubscribe && unsubscribe();
     };
   }, [isUser]);
 
   useEffect(() => {
-    let isMounted = true;
+    let unsubscribe;
     if (isUser !== null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(isUser.email)
-        .collection("items")
-        .orderBy("itemTime", "desc")
-        .onSnapshot((snapshot) => {
-          const data = snapshot.docs.map((doc) => {
-            return { data: doc.data(), id: doc.id };
-          });
-          if (isMounted) {
-            setItemsCollection(data);
-          }
-        });
+      unsubscribe = getOthersItem(isUser, setExchangeDone);
     }
     return () => {
-      isMounted = false;
-    };
-  }, [isUser]);
-
-  useEffect(() => {
-    let isMounted = true;
-    if (isUser !== null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(isUser.email) //拿到別人的衣服
-        .collection("exchangeItems")
-        .orderBy("exchangeTime", "desc")
-        .onSnapshot((snapshot) => {
-          const data = snapshot.docs
-            .map((doc) => {
-              return { data: doc.data(), id: doc.id };
-            })
-            .filter(
-              (data) =>
-                data.data.status === "done" && data.data.owner !== isUser.email
-            );
-          if (isMounted) {
-            setExchangeDone(data);
-          }
-        });
-    }
-    return () => {
-      isMounted = false;
+      unsubscribe && unsubscribe();
     };
   }, [isUser]);
 
@@ -223,36 +95,8 @@ const Exchange = () => {
     },
   });
 
-  const deleteExchangeItem = (item, id) => {
-    console.log(item, "Id", id);
-
-    const itemDoc = firebase
-      .firestore()
-      .collection("users")
-      .doc(isUser.email)
-      .collection("exchangeItems")
-      .doc(id);
-    let ref = firebase.storage().ref("itemImages/" + itemDoc.id);
-
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(isUser.email)
-      .collection("exchangeItems")
-      .doc(id)
-      .delete()
-      .then(() => {
-        if (!allItems.map((obj) => obj.itemImg).includes(item.itemImg)) {
-          ref.delete();
-        }
-        Toast.fire({
-          icon: "warning",
-          title: "刪除成功!!",
-        });
-      });
-  };
   return (
-    <ExchangeContainer>
+    <ExchangeContainer style={{ padding: "15px" }}>
       {exchangeDone.length === 0 ? (
         <EmptyContainer>
           <EmptyDiv
@@ -268,7 +112,13 @@ const Exchange = () => {
               <EachDiv key={i}>
                 <DeleteBtn
                   onClick={() => {
-                    deleteExchangeItem(item.data, item.id);
+                    deleteExchangeItem(
+                      item.data,
+                      item.id,
+                      isUser,
+                      allItems,
+                      Toast
+                    );
                   }}
                 >
                   X
@@ -281,7 +131,7 @@ const Exchange = () => {
                       <img
                         src={item.data.itemImg}
                         alt="exchange-item"
-                        style={{ height: "140px" }}
+                        style={{ height: "140px", cursor: "pointer" }}
                       />
                     </ExchangeItem>
                   }

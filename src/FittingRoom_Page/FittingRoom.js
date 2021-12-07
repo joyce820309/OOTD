@@ -1,23 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
-import "../CSS/common.css";
+import "../Style/common.css";
 import { fabric } from "fabric";
 import "firebase/firestore";
 import "firebase/storage";
-import "firebase/auth";
 import Swal from "sweetalert2";
 import firebase from "../utils/firebase";
-import Popup from "reactjs-popup";
-import WebFont from "webfontloader";
 import TagAll from "./TagAll";
-import TagClothes from "./TagClothes";
-import TagPants from "./TagPants";
-import TagSkirt from "./TagSkirt";
-import TagShoes from "./TagShoes";
-import TagAccessary from "./TagAccessary";
-import Loading from "../CSS/LoadingCSS";
+import Tags from "./Tags";
+import Loading from "../General/Loading";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useSelector } from "react-redux";
+import { getAccountName, setImgInfoToCollection } from "../utils/firebaseFunc";
 
 import {
   YellowBG,
@@ -35,253 +29,60 @@ import {
   LeftDiv,
   Span,
   MobileTagBox,
-} from "../CSS/FittingCSS";
+  DairyPopup,
+  SaveBtn,
+  Input,
+  InputNum,
+  BtnDiv,
+  ExplainSave,
+  DeleteBtn,
+  ExplainDelete,
+  ClosetBox,
+  ImgsetBox,
+  ImgBox,
+  MirrorTitleDiv,
+  ClosetTitle,
+  ItemForm,
+  Backdrop,
+  SaveForm,
+  Btn,
+  ClosetTitleDiv,
+  StyledPopup,
+} from "../Style/FittingCSS";
 let movingImage;
 let filePath;
 
-const BtnDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 5px dashed #8f9fa357;
-  padding: 10px 20px;
-`;
-
-const Btn = styled.button`
-  padding: 5px 15px;
-  margin: auto 8px;
-  background-color: #88b0c347;
-  border-radius: 8px;
-  &:hover {
-    transform: scale(1.2);
-    background-color: #8ebed5e6;
-  }
-  &:hover :first-child {
-    position: absolute;
-    display: flex;
-    left: -85px;
-    top: -60px;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
-const ExplainSave = styled.div`
-  display: none;
-  width: 270px;
-  height: 40px;
-  border: 3px #88b0c347 solid;
-  border-radius: 9px;
-  background-color: snow;
-  padding: 5px 10px;
-`;
-
-const DeleteBtn = styled(Btn)`
-  position: relative;
-  background-color: #f1cdc5b3;
-  &:hover {
-    background-color: #f1cdc5;
-  }
-  &:hover :first-child {
-    position: absolute;
-    display: flex;
-    left: -25px;
-    top: -60px;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
-const ExplainDelete = styled.div`
-  display: none;
-  width: 250px;
-  height: 40px;
-  border: 3px #e5a9aa96 solid;
-  border-radius: 9px;
-  background-color: snow;
-  padding: 5px 10px;
-`;
-
-const ClosetBox = styled.div`
-  margin: 30px 80px 20px 20px;
-  background-color: white;
-  box-shadow: 0px 2px 21px -2px rgba(182, 163, 163, 0.51);
-  height: 630px;
-  width: 800px;
-  position: relative;
-  top: 10px;
-  @media screen and (max-width: 1400px) {
-    width: 700px;
-    margin: 25px 10px 20px 20px;
-  }
-  @media screen and (max-width: 1165px) {
-    width: 650px;
-    margin: 25px auto 20px 20px;
-  }
-`;
-
-const ImgsetBox = styled.div`
-  padding-left: 60px;
-  padding-right: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #fff;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border: 3px solid #fff;
-  }
-  scrollbar-width: 5px;
-  scrollbar-color: #fff #fff;
-  height: 100%;
-  @media screen and (max-width: 1400px) {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-`;
-
-const ImgBox = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const ClosetTitleDiv = styled.div`
-  font-weight: 800;
-  margin: 20px;
-  position: absolute;
-  top: -50px;
-  left: 10px;
-  color: #515d6087;
-  padding: 8px 12px 8px 10px;
-  transform: rotate(-2.3deg);
-  cursor: pointer;
-  z-index: 10;
-  background-color: #94c5d1bd;
-`;
-
-const MirrorTitleDiv = styled(ClosetTitleDiv)`
-  background-color: #edc4b4c2;
-  transform: rotate(-2.3deg);
-  top: 45px;
-  left: 10px;
-`;
-
-const ClosetTitle = styled.div`
-  padding: 5px;
-  border-radius: 5px;
-`;
-
-const ItemForm = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const SaveForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const Backdrop = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: #f3d19e57;
-  display: flex;
-  justify-content: center;
-  border-radius: 25px;
-`;
-
-const StyledPopup = styled(Popup)`
-  &-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-  &-content {
-    margin: auto;
-    background: rgb(255, 255, 255);
-    width: 580px;
-    display: flex;
-    height: 550px;
-    border-radius: 25px;
-  }
-`;
-
-const DairyPopup = styled(StyledPopup)`
-  &-content {
-    width: 350px;
-    height: 400px;
-  }
-`;
-
-const SaveBtn = styled.div`
-  background-color: #d4e4eb;
-  text-align: center;
-  line-height: 1.6em;
-  color: #31342d5c;
-  cursor: pointer;
-  margin: 0 auto;
-  font-size: 13px;
-  font-weight: 900;
-  border-radius: 15px;
-  &:hover {
-    transform: scale(1.2) !important;
-    background-color: #f3d5ca;
-  }
-`;
-
-const Input = styled.input`
-  background-color: snow;
-  /* width: 100%; */
-  &:focus-visible {
-    outline: #e9c58eba 2px solid;
-  }
-`;
-
-const InputNum = styled.input`
-  background-color: snow;
-  &:focus-visible {
-    outline: #e9c58eba 2px solid;
-  }
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-  &::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
-`;
-
 const FittingRoom = () => {
+  const isUser = useSelector((state) => state.user);
   const [account, setAccount] = useState("");
   const [itemSize, setItemSize] = useState("");
   const [canvas, setCanvas] = useState({});
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState();
   const [option, setOption] = useState("");
   const [itemName, setItemName] = useState("");
-  const [date, setDate] = useState("");
   const [imgFile, setImgFile] = useState("");
   const [diaryURL, setDiaryURL] = useState("");
-  const [isUser, setIsUser] = useState(null);
   const [outfitName, setOutfitName] = useState("");
   const [outfitSeason, setOutfitSeason] = useState("");
   const [filerStatus, setFilterStatus] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectDate, setSelectDate] = useState(new Date());
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  const [date, setDate] = useState("");
 
   useEffect(() => {
     setCanvas(initCanvas());
   }, []);
 
   useEffect(() => {
-    WebFont.load({
-      google: {
-        families: ["Chilanka", "Droid Sans"],
-      },
-    });
-  }, []);
+    setYear(selectDate.getFullYear());
+    setMonth(Number(selectDate.getMonth()) + 1);
+    setDate(Number(selectDate.getDate()));
+  }, [selectDate]);
+
+  console.log(month);
+  console.log(date);
 
   useEffect(() => {
     const modified = { drop: dropImg };
@@ -297,30 +98,14 @@ const FittingRoom = () => {
   }, [canvas]);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-      }
-    });
-  }, [isUser]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    if (isUser !== null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(isUser.email)
-        .get()
-        .then((doc) => {
-          if (isMounted) {
-            setAccount(doc.data().name);
-          }
-        });
+    let unsubscribe;
+    if (Object.keys(isUser).length !== 0) {
+      getAccountName(isUser).then((doc) => {
+        setAccount(doc.data()?.name);
+      });
     }
     return () => {
-      isMounted = false;
+      unsubscribe && unsubscribe();
     };
   }, [isUser]);
 
@@ -335,14 +120,10 @@ const FittingRoom = () => {
       toast.addEventListener("mouseleave", Swal.resumeTimer);
     },
   });
-  console.log(date.toLocaleString());
 
   const summitItem = () => {
     setIsLoading(true);
-    const YYYY = date.toLocaleString().slice(0, 4);
-    const MM = date.toLocaleString().slice(5, 7);
-    const DD = date.toLocaleString().slice(8, 10);
-    console.log(YYYY, MM, DD);
+
     const item = firebase
       .firestore()
       .collection("users")
@@ -356,7 +137,7 @@ const FittingRoom = () => {
     if (
       imgFile === "" ||
       itemName === "" ||
-      price === 0 ||
+      price === undefined ||
       itemSize === "" ||
       option === "" ||
       date === ""
@@ -366,33 +147,25 @@ const FittingRoom = () => {
         title: "記得將表單填寫完整唷！",
       });
     } else {
-      // const file = imgFile.target.files[0];
-
       filePath.put(imgFile, { contentType: imgFile.type }).then(() => {
         filePath.getDownloadURL().then((imageUrl) => {
-          item
-            .set({
-              itemExpense: price,
-              itemName: itemName,
-              YYYY: YYYY,
-              MM: MM,
-              DD: DD,
-              itemImg: imageUrl,
-              itemTag: option,
-              itemSize: itemSize,
-              itemTime: firebase.firestore.Timestamp.now(),
-              owner: isUser.email,
-              name: account,
-              status: "none",
-            })
-            .then(() => {
-              Toast.fire({
-                icon: "warning",
-                title: "新增成功!!",
-              });
-              setIsLoading(false);
-              console.log("success");
-            });
+          const data = {
+            itemExpense: price,
+            itemName: itemName,
+            YYYY: year,
+            MM: month,
+            DD: date,
+            itemImg: imageUrl,
+            itemTag: option,
+            itemSize: itemSize,
+            itemTime: firebase.firestore.Timestamp.now(),
+            owner: isUser.email,
+            name: account,
+            status: "none",
+          };
+
+          setImgInfoToCollection(item, data, Toast, setIsLoading);
+          setIsLoading(false);
         });
       });
     }
@@ -415,13 +188,6 @@ const FittingRoom = () => {
     }
   };
 
-  const handleBack = (e) => {
-    if (canvas) {
-      const obj = canvas.getActiveObject();
-      canvas.sendToBack(obj);
-    }
-  };
-
   const handleSave = (e) => {
     const item = firebase
       .firestore()
@@ -438,8 +204,6 @@ const FittingRoom = () => {
         setDiaryURL(diaryUrl);
 
         if (outfitName === "" || outfitSeason === "") {
-          console.log(outfitName, outfitSeason);
-
           Toast.fire({
             icon: "warning",
             title: "記得替穿搭想個主題 ＆ 選取類別吧！",
@@ -471,11 +235,6 @@ const FittingRoom = () => {
     });
   };
 
-  // const putId = (id) => document.getElementById(id);
-  // const imageUploader = putId("imageUploader");
-  // const imgset = putId("imgset");
-  // const imgsetRef = useRef();
-  // const defaultImg = putId("defaultImg");
   let imgDragOffset = {
     offsetX: 0,
     offsetY: 0,
@@ -510,11 +269,7 @@ const FittingRoom = () => {
     : "https://react.semantic-ui.com/images/wireframe/image.png";
 
   return (
-    <div
-      style={{
-        fontFamily: "Chilanka",
-      }}
-    >
+    <div>
       <YellowBG />
 
       <Container>
@@ -595,12 +350,12 @@ const FittingRoom = () => {
               </div>
             ) : null}
             <ImgBox id="imgset" onMouseDown={(e) => saveImg(e)}>
-              {filerStatus === "all" ? <TagAll /> : <></>}
-              {filerStatus === "clothes" ? <TagClothes /> : <></>}
-              {filerStatus === "pants" ? <TagPants /> : <></>}
-              {filerStatus === "skirt" ? <TagSkirt /> : <></>}
-              {filerStatus === "shoes" ? <TagShoes /> : <></>}
-              {filerStatus === "accessary" ? <TagAccessary /> : <></>}
+              {filerStatus === "all" ? <TagAll /> : null}
+              {filerStatus === "clothes" ? <Tags tag={"clothes"} /> : null}
+              {filerStatus === "pants" ? <Tags tag={"pants"} /> : null}
+              {filerStatus === "skirt" ? <Tags tag={"skirt"} /> : null}
+              {filerStatus === "shoes" ? <Tags tag={"shoes"} /> : null}
+              {filerStatus === "accessary" ? <Tags tag={"accessary"} /> : null}
             </ImgBox>
 
             <StyledPopup modal trigger={<AddBtn>+</AddBtn>}>
@@ -693,7 +448,7 @@ const FittingRoom = () => {
                         <InputNum
                           style={{ "-webkit-appearance": "none" }}
                           type="number"
-                          placeholder="記得輸入金額唷！"
+                          // placeholder="記得輸入金額唷！"
                           value={price}
                           onChange={(e) => {
                             setPrice(Number(e.target.value));
@@ -701,27 +456,18 @@ const FittingRoom = () => {
                           }}
                         />
                       </Div>
-                      <Div
-                      // style={{
-                      //   borderTop: "dashed 3px #f3d19efa",
-                      //   paddingTop: "6px",
-                      // }}
-                      >
+                      <Div>
                         <Span>購買日期：</Span>
 
-                        <input
-                          style={{ backgroundColor: "snow" }}
-                          type="date"
-                          selected={date}
-                          onChange={(e) => setDate(e.target.value)}
-                        />
-
-                        {/* <DatePicker
+                        <DatePicker
                           dateFormat="yyyy/MM/dd"
-                          selected={date}
-                          onChange={(e) => setDate(e)}
+                          selected={selectDate}
+                          onChange={(e) => {
+                            setSelectDate(e);
+                            console.log(e);
+                          }}
                           maxDate={new Date()}
-                        /> */}
+                        />
                       </Div>
                     </div>
                   </ItemForm>
@@ -733,7 +479,7 @@ const FittingRoom = () => {
                         if (
                           imgFile !== "" &&
                           itemName !== "" &&
-                          price !== 0 &&
+                          price !== undefined &&
                           itemSize !== "" &&
                           option !== "" &&
                           date !== ""

@@ -156,6 +156,8 @@ const Header = () => {
   const [initMsgLength, setInitMsgLength] = useState(0);
   const [status, setStatus] = useState("homepage");
 
+  console.log(msgLength);
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       setIsUser(user);
@@ -167,7 +169,10 @@ const Header = () => {
     if (isUser !== null) {
       firebase
         .firestore()
-        .collectionGroup("exchangeItems")
+        .collection("users")
+        .doc(isUser.email)
+        .collection("exchangeItems")
+        .orderBy("exchangeTime", "desc")
         .onSnapshot((snapshot) => {
           const data = snapshot.docs
             .map((doc) => {
@@ -181,11 +186,11 @@ const Header = () => {
 
           if (isMounted) {
             setAllExchange(data);
-            console.log(data.length);
+            console.log("real", data.length);
             setMsgLength(data.length);
             if (once) {
               setInitMsgLength(data.length);
-              console.log(data.length);
+              console.log("init:", data.length);
 
               setOnece(false);
             }
@@ -287,10 +292,9 @@ const Header = () => {
                 我の檔案
               </NavLink4>
             </NavbarDiv>
-            {console.log(msgLength)}
-            {console.log(initMsgLength)}
+
             {msgLength ? (
-              msgLength - initMsgLength === 0 ? (
+              msgLength === initMsgLength ? (
                 <BellDiv>
                   <img
                     ref={bell}
@@ -318,7 +322,6 @@ const Header = () => {
               )
             ) : (
               <>
-                {console.log("Hi")}
                 <BellDiv>
                   <img
                     ref={bell}

@@ -9,8 +9,10 @@ const ItemInfo = styled.div`
 `;
 
 const ImgDiv = styled.div`
-  width: 30%;
-  height: 160px;
+  /* width: 30%;
+  height: 160px; */
+  height: 250px;
+  width: 250px;
   margin-bottom: 15px;
   padding: 5px;
   display: flex;
