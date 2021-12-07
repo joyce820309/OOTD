@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# OOTD- Outfit Of The Day
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## <img src="./build/OOTDicon.png" width=22/> Website Link
 
-## Available Scripts
+- **Website Link :** https://side-project-d1344.web.app/
 
-In the project directory, you can run:
+Use Google account to login <br />
+You can also create your own native account <br />
 
-### `npm start`
+- **Test Account**<br />
+  account: test@test.com<br />
+  password: test123
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## <img src="./build/OOTDicon.png" width=22/> Techniques
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Front-End Fundamental
 
-### `npm test`
+- Javascript (ES6)
+- HTML
+- CSS
+<!-- - Responsive Web Design (RWD) -->
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Frameworks & Library
 
-### `npm run build`
+- React (Hooks)
+- React Router
+- Styled-Components
+- Redux
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Firebase Service
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Authentication
+- Cloud Firestore
+- Cloud Storage
+- Cloud Function
+- Hosting
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Packages
 
-### `npm run eject`
+- fabric
+- recharts
+- sweetalert2
+- reactjs-popup
+- react-loadingg
+- react-icons
+- react-fontawesome
+- aos
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Other
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Lint Tool: ESLint with airbnb style
+- Version Control : Git / GitHub
+- Unit Test: Jest
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## <img src="./build/OOTDicon.png" width=22/> Flow Chart
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+<img src="./src/img/userflow.png" width=100%/>
 
-## Learn More
+## <img src="./build/OOTDicon.png" width=22/> Features Demo
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Upload user's clothes in the closet
+  <br />
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<img src="./src/img/upload.gif" width=100%/>
 
-### Code Splitting
+- Drag and drop image into canvas using fabric and save
+  <br />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+<img src="./src/img/dnd.gif" width=100%/>
 
-### Analyzing the Bundle Size
+- Fill in the infomation of exchange and check it on Find new dress page
+  <br />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+<img src="./src/img/exchange.gif" width=100%/>
 
-### Making a Progressive Web App
+## <img src="./build/OOTDicon.png" width=22/> Future Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Build Chat Room to let users connect with each other and make sure contact infomation before exchange clothes
 
-### Advanced Configuration
+## <img src="./build/OOTDicon.png" width=22/> Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Author:** Joyce Weng <br />
+**Email:** joyce820309@gmail.com
