@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Popup from "reactjs-popup";
-import { ImgDiv, ItemForm } from "../CSS/PopupCSS";
-import { Div, Span } from "../CSS/PersonalCSS";
-import firebase from "../utils/firebase";
+import { ImgDiv, ItemForm } from "../Style/PopupCSS";
+import { Div, Span } from "../Style/PersonalCSS";
 import "firebase/firestore";
 import "firebase/storage";
-import "firebase/auth";
+import { useSelector } from "react-redux";
+import { SaveTitleToDairy, handleSaveBtn } from "../utils/firebaseFunc";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -47,88 +47,29 @@ const SubmitBtn = styled.div`
 `;
 
 const SaveBtn = () => {
-  const [isUser, setIsUser] = useState(null);
+  const isUser = useSelector((state) => state.user);
   const [outfitName, setOutfitName] = useState("");
   const [outfitSeason, setOutfitSeason] = useState("");
   const [account, setAccount] = useState("");
-  const [diaryURL, setDiaryURL] = useState("");
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-      }
-    });
-  }, [isUser]);
-
-  useEffect(() => {
-    let isMounted = true;
+    let unsubscribe;
 
     if (isUser !== null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(isUser.email)
-        .get()
-        .then((doc) => {
-          if (isMounted) {
-            setAccount(doc.data().name);
-          }
-        });
+      unsubscribe = SaveTitleToDairy(isUser, setAccount);
     }
     return () => {
-      isMounted = false;
+      unsubscribe && unsubscribe();
     };
   }, [isUser]);
 
-  const handleSave = (e) => {
-    const item = firebase
-      .firestore()
-      .collection("users")
-      .doc(isUser.email)
-      .collection("items")
-      .doc();
-    let canvas = document.getElementById("canvas");
-    let dataUrl = canvas.toDataURL();
-    let ref = firebase.storage().ref("diaryImages/" + item.id); //傳入filebase的路徑位置
-
-    ref.putString(dataUrl, "data_url").then((snapshot) => {
-      ref.getDownloadURL().then((diaryUrl) => {
-        setDiaryURL(diaryUrl);
-
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(isUser.email)
-          .collection("outfits")
-          .doc(item.id)
-          .set({
-            outfitName: outfitName, //讓使用者取名？
-            outfitImg: diaryUrl,
-            outfitSeason: outfitSeason,
-            YYYY: new Date().getFullYear(),
-            MM: new Date().getMonth() + 1,
-            DD: new Date().getDate(),
-            outfitTime: firebase.firestore.Timestamp.now(),
-            owner: isUser.email,
-            name: account,
-          });
-
-        console.log(new Date());
-      });
-    });
-  };
   return (
     <StyledPopup modal trigger={<button>儲存</button>}>
       {(close) => (
         <Backdrop>
           <ItemForm>
             <ImgDiv>
-              <img
-                // src={diaryURL}
-                alt="outfit item"
-                style={{ height: "100%" }}
-              />
+              <img alt="outfit item" style={{ height: "100%" }} />
             </ImgDiv>
             <Div>
               <Span>想個主題</Span>
@@ -155,7 +96,7 @@ const SaveBtn = () => {
             <Div>
               <SubmitBtn
                 onClick={(e) => {
-                  handleSave(e);
+                  handleSaveBtn(e, isUser, outfitName, outfitSeason, account);
                   close();
                 }}
               >

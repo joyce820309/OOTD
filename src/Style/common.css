@@ -6,6 +6,10 @@
   /* z-index: 1999; */
 }
 
+.canvas-container {
+  margin-top: -40px;
+}
+
 @media screen and (max-width: 1400px) {
   .canvas-container {
     width: 350px !important;
@@ -92,11 +96,11 @@ select:focus-visible {
 
 option {
   background-color: snow;
-  color: aqua;
+  color: rgb(102, 96, 61);
 }
 
-.recharts-responsive-container {
-  margin-top: -200px;
+/* FOR Recharts */
+.recharts-wrapper {
 }
 
 /* FOR Canlender */

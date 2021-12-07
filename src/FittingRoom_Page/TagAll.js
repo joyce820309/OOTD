@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import "firebase/firestore";
 import firebase from "../utils/firebase";
-import { EmptyDiv, TagContainer, ImgDiv, LoadingDiv } from "../CSS/FittingCSS";
-import Loading from "../CSS/LoadingCSS";
+import {
+  EmptyDiv,
+  TagContainer,
+  ImgDiv,
+  LoadingDiv,
+} from "../Style/FittingCSS";
+import Loading from "../General/Loading";
+import { useSelector } from "react-redux";
 
 const TagAll = () => {
-  const [isUser, setIsUser] = useState(null);
+  const isUser = useSelector((state) => state.user);
   const [renderAll, setRenderAll] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-      }
-    });
-  }, [isUser]);
-
+  console.log(renderAll);
   useEffect(() => {
     let isMounted = true;
 
@@ -61,14 +59,14 @@ const TagAll = () => {
             </TagContainer>
           ) : (
             renderAll.map((url, index) => (
-              <ImgDiv>
+              <ImgDiv key={url}>
                 <img
-                  key={index}
                   src={url}
                   alt="clothes"
                   crossOrigin="anonymous"
                   style={{
                     maxHeight: "160px",
+                    maxWidth: "100%",
                     margin: "20px",
                     cursor: "grab",
                   }}

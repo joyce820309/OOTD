@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import "../CSS/SignIn.css";
+import "../Style/SignIn.css";
 import firebase from "../utils/firebase";
 import "firebase/firestore";
 import "firebase/auth";
@@ -12,84 +12,66 @@ import { googleProvider } from "./SocialMediaAuth";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
-
+import {
+  HeaderSignin,
+  SocialContainer,
+  SocialA,
+  Form,
+  ErrDiv,
+  Input,
+  Span,
+} from "../Style/SignInCSS";
 library.add(faGoogle, faFacebook);
 
-const HeaderSignin = styled.div`
-  color: #ed8f03;
-`;
-
-// const Button = styled.button`
-//   border-radius: 10px;
-//   border: 1px solid #fdb254;
-//   background-color: #fdb254;
-//   color: #ffffff;
-//   font-size: 12px;
-//   font-weight: bold;
-//   padding: 12px 45px;
-//   letter-spacing: 1px;
-//   text-transform: uppercase;
-//   transition: transform 80ms ease-in;
-//   &:active {
-//     transform: scale(0.95);
-//   }
-//   &:focus {
-//     outline: none;
-//   }
+// const HeaderSignin = styled.div`
+//   color: #ed8f03;
 // `;
 
-const SocialContainer = styled.div`
-  margin: 20px 0;
-`;
+// const SocialContainer = styled.div`
+//   margin: 20px 0;
+// `;
 
-const Input = styled.input`
-  background-color: #eee;
-  border: none;
-  padding: 12px 15px;
-  margin: 8px 0;
-  width: 100%;
-  border-radius: 5px;
-`;
+// const Input = styled.input`
+//   background-color: #eee;
+//   border: none;
+//   padding: 12px 15px;
+//   margin: 8px 0;
+//   width: 100%;
+//   border-radius: 5px;
+// `;
 
-const Span = styled.span`
-  font-size: 12px;
-`;
+// const Span = styled.span`
+//   font-size: 12px;
+// `;
 
-const SocialA = styled.a`
-  color: #333;
-  font-size: 14px;
-  text-decoration: none;
-  margin: 15px 0;
-  border: 1px solid #ecd9bc;
-  border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 5px;
-  height: 40px;
-  width: 40px;
-`;
-
-const Form = styled.div`
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 0 50px;
-  height: 100%;
-  text-align: center;
-`;
-
-const ErrDiv = styled.div`
-  color: #f5756c;
-`;
-
-// const A = styled.a`
+// const SocialA = styled.a`
 //   color: #333;
 //   font-size: 14px;
 //   text-decoration: none;
 //   margin: 15px 0;
+//   border: 1px solid #ecd9bc;
+//   border-radius: 50%;
+//   display: inline-flex;
+//   justify-content: center;
+//   align-items: center;
+//   margin: 0 5px;
+//   height: 40px;
+//   width: 40px;
+// `;
+
+// const Form = styled.div`
+//   background-color: #ffffff;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   flex-direction: column;
+//   padding: 0 50px;
+//   height: 100%;
+//   text-align: center;
+// `;
+
+// const ErrDiv = styled.div`
+//   color: #f5756c;
 // `;
 
 const SignUp = ({ close }) => {
@@ -116,6 +98,8 @@ const SignUp = ({ close }) => {
     firebase.firestore().collection("users").doc().set({
       name: firebase.auth().currentUser.displayName,
       email: firebase.auth().currentUser.email,
+      budget: 0,
+      remaining: 0,
       // password: password,
     });
     history.push("/FittingRoom");
@@ -166,21 +150,14 @@ const SignUp = ({ close }) => {
       <Form>
         <HeaderSignin>Create Account</HeaderSignin>
         <SocialContainer>
-          {/* <SocialA href="#">
-            <FontAwesomeIcon
-              icon={faFacebook}
-              style={{ color: "#70604c" }}
-              onClick={() => handleSocialMedia(facebookProvider)}
-            />
-          </SocialA>
-
           <SocialA href="#">
             <FontAwesomeIcon
               icon={faGoogle}
               style={{ color: "#70604c" }}
               onClick={() => handleSocialMedia(googleProvider)}
             />
-          </SocialA> */}
+          </SocialA>
+          Use your Google Account
         </SocialContainer>
         <Span>or use your email for registration</Span>
         <Input

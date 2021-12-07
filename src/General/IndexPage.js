@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from "react";
-
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import combo from "./img/combo.png";
-import pinkSweater from "./img/pinkSweater.jpeg";
-import orangeSweater from "./img/orangeSweater.jpeg";
-import WebFont from "webfontloader";
-import badroom from "./img/bedroom.jpeg";
-import small1 from "./img/small1.jpeg";
-import small2 from "./img/small2.jpeg";
-import small3 from "./img/small3.jpeg";
-import firebase from "./utils/firebase";
+import combo from "../img/combo.png";
+import pinkSweater from "../img/pinkSweater.jpeg";
+import orangeSweater from "../img/orangeSweater.jpeg";
+import badroom from "../img/bedroom.jpeg";
+import small1 from "../img/small1.jpeg";
+import small2 from "../img/small2.jpeg";
+import small3 from "../img/small3.jpeg";
+import firebase from "../utils/firebase";
 import "firebase/auth";
 import AOS from "aos";
 import Popup from "reactjs-popup";
-import SignUp from "./SignIn_Page/SignUp";
-import SignIn from "./SignIn_Page/SignIn";
-import OverLay from "./SignIn_Page/OverLay";
+import SignUp from "../SignIn_Page/SignUp";
+import SignIn from "../SignIn_Page/SignIn";
+import OverLay from "../SignIn_Page/OverLay";
 import "aos/dist/aos.css"; // You can also use <link> for styles
 import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   position: relative;
-  font-family: "Chilanka";
 `;
 
 const SectionBG = styled.div`
@@ -75,12 +73,6 @@ const SignBody = styled.div`
 const BedroomDiv = styled.div`
   z-index: 15;
   margin-left: -150px;
-`;
-
-const GreetingDiv = styled.div`
-  font-size: 36px;
-  font-weight: 700;
-  color: #31342d5c;
 `;
 
 const TypingDiv = styled.div`
@@ -186,7 +178,7 @@ const ContextText = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 25px;
-  font-family: "Chilanka";
+  /* font-family: "Chilanka"; */
   font-size: 19px;
   line-height: 1.5em;
   font-weight: 400;
@@ -218,16 +210,11 @@ function IndexPage() {
   AOS.init();
   const history = useHistory();
   const [isUser, setIsUser] = useState(null);
+  const user = useSelector((state) => state.user);
   const [toggleClassName, setClassName] = useState("container");
   const [userName, setUserName] = useState(null);
 
-  useEffect(() => {
-    WebFont.load({
-      google: {
-        families: ["Droid Sans", "Chilanka"],
-      },
-    });
-  }, []);
+  console.log(user);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
