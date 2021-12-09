@@ -1,8 +1,8 @@
 # OOTD- Outfit Of The Day
 
-<img src="./src/img/OOTDLogo.png" width=25%/>
+<img src="./src/img/OOTDLogo.png" width=20%/>
 
-## <img src="./src/img/OOTD.png" width=5%/> Website Link
+## <img src="./src/img/OOTD.png" width=3%/> Website Link
 
 - **Website Link :** https://side-project-d1344.web.app/
 
