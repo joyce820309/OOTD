@@ -2,7 +2,7 @@
 
 <img src="./src/img/OOTDLogo.png" width=20%/>
 
-## <img src="./src/img/OOTD.png" width=5%/> Website Link
+## Website Link
 
 - **Website Link :** https://side-project-d1344.web.app/
 
@@ -13,7 +13,7 @@ You can also create your own native account <br />
   account: test@test.com<br />
   password: test123
 
-## <img src="./src/img/OOTDicon.png" width=22/> Techniques
+## Techniques
 
 ### Front-End Fundamental
 
@@ -54,11 +54,11 @@ You can also create your own native account <br />
 - Version Control : Git / GitHub
 - Unit Test: Jest
 
-## <img src="./src/img/OOTDicon.png" width=22/> Flow Chart
+## Flow Chart
 
 <img src="./src/img/userflow.png" width=100%/>
 
-## <img src="./src/img/OOTDicon.png" width=22/> Features Demo
+## Features Demo
 
 - Upload user's clothes in the closet
   <br />
@@ -75,11 +75,11 @@ You can also create your own native account <br />
 
 <img src="./src/img/exchange.gif" width=100%/>
 
-## <img src="./src/img/OOTDicon.png" width=22/> Future Features
+## Future Features
 
 - Build Chat Room to let users connect with each other and make sure contact infomation before exchange clothes
 
-## <img src="./src/img/OOTDicon.png" width=22/> Contact
+## Contact
 
 **Author:** Joyce Weng <br />
 **Email:** joyce820309@gmail.com
