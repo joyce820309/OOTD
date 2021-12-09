@@ -26,6 +26,8 @@ const ExchangeItem = styled.div`
   align-items: center;
   margin: 18px 10px;
   padding: 10px;
+  height: 140px;
+  width: 150px;
 `;
 
 const StyledPopup = styled(Popup)`
@@ -131,7 +133,11 @@ const Exchange = () => {
                       <img
                         src={item.data.itemImg}
                         alt="exchange-item"
-                        style={{ height: "140px", cursor: "pointer" }}
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          cursor: "pointer",
+                        }}
                       />
                     </ExchangeItem>
                   }

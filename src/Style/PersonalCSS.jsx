@@ -58,7 +58,7 @@ const EachDiv = styled.div`
   padding: 10px;
   position: relative;
   @media screen and (max-width: 1440px) {
-    height: initial;
+    /* height: initial; */
   }
   @media screen and (max-width: 1040px) {
     width: 35%;

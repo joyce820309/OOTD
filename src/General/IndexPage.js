@@ -127,7 +127,7 @@ const SmallImgDiv = styled.div`
   display: flex;
   margin-left: 0.8rem;
   @media screen and (max-width: 1215px) {
-    margin-left: 0;
+    /* margin-left: 0; */
   }
 `;
 
@@ -214,8 +214,6 @@ function IndexPage() {
   const [toggleClassName, setClassName] = useState("container");
   const [userName, setUserName] = useState(null);
 
-  console.log(user);
-
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -256,12 +254,6 @@ function IndexPage() {
         </BedroomDiv>
 
         <TextDiv>
-          {/* {userName ? (
-            <GreetingDiv>Hello, </GreetingDiv>
-          ) : (
-            <GreetingDiv>Hello, {userName.uid}</GreetingDiv>
-          )} */}
-
           <TypingDiv>
             <Typing>今天穿什麼？</Typing>
           </TypingDiv>
@@ -285,7 +277,7 @@ function IndexPage() {
               </StyledPopup>
             )}
 
-            <SmallImgDiv>
+            <SmallImgDiv data-aos="zoom-in-left">
               <SmallImg
                 src={small1}
                 alt="small-pic"

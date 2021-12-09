@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import SubTotal from "./SubTotal";
 import EditBudget from "./EditBudget";
-import RenderPieChart from "./RenderPieChart";
+import RenderCharts from "./RenderCharts";
 
 const BudgetContainer = styled.div`
   display: flex;
@@ -36,7 +36,7 @@ const Expense = () => {
     <BudgetContainer>
       <SubTotal />
       <EditBudget />
-      <RenderPieChart />
+      <RenderCharts />
     </BudgetContainer>
   );
 };

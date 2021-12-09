@@ -323,17 +323,12 @@ export const deleteDairyItem = (outfits, id, isUser, Toast) => {
 
   item.delete().then(() => {
     let ref = firebase.storage().ref("diaryImages/" + item.id);
-    ref
-      .delete()
-      .then(() => {
-        Toast.fire({
-          icon: "warning",
-          title: "刪除成功!!",
-        });
-      })
-      .catch((error) => {
-        console.error(error);
+    ref.delete().then(() => {
+      Toast.fire({
+        icon: "warning",
+        title: "刪除成功!!",
       });
+    });
   });
 };
 
@@ -350,8 +345,6 @@ export const putFullYearPriceToChart = (isUser, date, setData) => {
         })
         .filter((doc) => doc.YYYY === Number(date));
 
-      console.log(data);
-
       const monthExp = {
         1: 0,
         2: 0,
@@ -366,32 +359,9 @@ export const putFullYearPriceToChart = (isUser, date, setData) => {
         11: 0,
         12: 0,
       };
-      // const month = [
-      //   "1",
-      //   "2",
-      //   "3",
-      //   "4",
-      //   "5",
-      //   "6",
-      //   "7",
-      //   "8",
-      //   "9",
-      //   "10",
-      //   "11",
-      //   "12",
-      // ];
-
-      // for (let i = 0; i < month.length; i++) {
-      //   monthExp[month[i]] = 0;
-      // }
-
-      console.log(monthExp);
 
       data.forEach((doc) => {
-        // let MM = (Number(doc.MM) - 2).toString();
         let MM = doc.MM.toString();
-
-        console.log(MM, typeof MM);
 
         if (MM === "1") {
           monthExp["1"] += doc.itemExpense;
@@ -422,8 +392,6 @@ export const putFullYearPriceToChart = (isUser, date, setData) => {
         }
       });
 
-      console.log(data);
-
       let dataArr = [];
       let nameArr = [
         "Jan.",
@@ -447,7 +415,6 @@ export const putFullYearPriceToChart = (isUser, date, setData) => {
         dataArr.push(d);
       }
       setData(dataArr);
-      console.log(dataArr);
     });
 };
 
@@ -460,11 +427,9 @@ export const putTagPriceToChart = (isUser, date, setPieData, setData) => {
     .onSnapshot((snapshot) => {
       const data = snapshot.docs
         .map((doc) => {
-          console.log(doc.data());
           return doc.data();
         })
         .filter((doc) => doc.YYYY === Number(date));
-      console.log(data);
       const tagExp = {};
       const tag = ["clothes", "pants", "skirt", "shoes", "accessary"];
 
@@ -496,7 +461,6 @@ export const putTagPriceToChart = (isUser, date, setPieData, setData) => {
         };
         dataArr.push(d);
       }
-      // console.log(dataArr);
       setPieData(dataArr);
       setData(data);
     });

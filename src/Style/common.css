@@ -101,6 +101,11 @@ option {
 
 /* FOR Recharts */
 .recharts-wrapper {
+  height: 450px;
+}
+
+.recharts-responsive-container {
+  position: absolute;
 }
 
 /* FOR Canlender */

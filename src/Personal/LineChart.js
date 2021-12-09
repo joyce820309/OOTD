@@ -25,7 +25,6 @@ const LineChartForm = () => {
 
     if (isUser !== null) {
       unsuscribe = putFullYearPriceToChart(isUser, date, setData);
-      console.log(data);
     }
     return () => {
       unsuscribe && unsuscribe();
@@ -42,7 +41,7 @@ const LineChartForm = () => {
           top: 185,
           right: 150,
           left: 70,
-          bottom: 30,
+          bottom: -20,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />

@@ -8,18 +8,14 @@ import LineChartForm from "./LineChart";
 const PieContainer = styled.div`
   position: relative;
   width: 100%;
-  /* height: 55%; */
-  outline: 1px tomato solid;
-  /* margin-bottom: 20%; */
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
 `;
 
-const Title = styled.div`
+const PieTitle = styled.div`
   position: relative;
-  outline: blue 1px solid;
   width: 40%;
   height: 30%;
   display: flex;
@@ -37,7 +33,7 @@ const LabelDiv = styled.div`
   transform: rotate(-1.3deg);
   position: absolute;
   top: 80px;
-  right: -40px;
+  right: -60px;
   width: 185px;
   height: 45px !important;
   color: #69725d;
@@ -47,7 +43,7 @@ const LabelDiv = styled.div`
 const ArrowDarkImg = styled.img`
   height: 110px;
   top: 0px;
-  left: 45px;
+  left: 140px;
   position: absolute;
 `;
 
@@ -62,7 +58,7 @@ const PieDiv = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 40px 80px;
+  margin: 40px 80px 20px 20px;
 `;
 
 const PieCircle = styled.div`
@@ -99,44 +95,50 @@ const PieText = styled.div`
 `;
 
 const LabelDiv2 = styled.div`
-  /* position: absolute; */
+  position: absolute;
   font-size: 1.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: 800;
-  /* top: 530px;
-  right: 320px; */
   height: 45px !important;
   border-radius: 3px;
-  top: 710px;
-  right: 100px;
+  /* top: 710px;
+  right: 100px; */
   background-color: #ddd69cd4;
   color: #64624dd4;
   width: 165px;
   transform: rotate(2.3deg);
+  height: 45px !important;
+`;
+
+const LineTitle = styled(PieTitle)`
+  margin-top: 130px;
 `;
 
 const ArrowImg = styled.img`
-  top: 737px;
-  right: 46px;
+  top: 32px;
+  right: 70px;
   height: 150px;
+  margin-top: 25px;
   position: absolute;
 `;
 
-const RenderPieChart = () => {
+const RenderCharts = () => {
   return (
     <PieContainer>
-      <Title>
+      <PieTitle>
         <LabelDiv> 今年各類別花費</LabelDiv>
         <ArrowDarkImg src={ArrowDark} alt="ArrowDarkImg" />
-      </Title>
+      </PieTitle>
       <div
         style={{
           display: "flex",
           height: "50%",
-          width: "50%",
-          border: "purple 2px solid",
+          width: "100%",
+          justifyContent: "space-between",
+          marginTop: "50px",
+          marginBottom: "40px",
         }}
       >
         <PieChartForm />
@@ -162,15 +164,24 @@ const RenderPieChart = () => {
             <PieText>配件</PieText>
           </CircleDiv>
         </PieDiv>
-        <div>
+        <LineTitle>
           <LabelDiv2>今年總花費</LabelDiv2>
           <ArrowImg src={Arrow} alt="ArrowImg" />
-        </div>
+        </LineTitle>
+      </div>{" "}
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          marginTop: "-150px",
+          marginBottom: "50px",
+          bottom: "0",
+        }}
+      >
+        <LineChartForm />
       </div>
-
-      <LineChartForm />
     </PieContainer>
   );
 };
 
-export default RenderPieChart;
+export default RenderCharts;

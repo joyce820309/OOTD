@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import firebase from "../utils/firebase";
 import WebFont from "webfontloader";
-// import CountUp from "react-countup";
 
 import "firebase/auth";
 
@@ -10,11 +9,11 @@ const Container = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  height: 30%;
+  height: 25%;
   margin: 5px auto;
 `;
 const TotalDiv = styled.div`
-  width: 23%;
+  width: 22%;
   background-color: #fffafab5;
   border-radius: 5px;
   position: relative;
@@ -41,6 +40,18 @@ const Content = styled.div`
   bottom: 5px;
   padding-left: 12px;
   border-radius: 3px;
+  @media screen and (max-width: 1055px) {
+    font-size: 1.5rem;
+  }
+  @media screen and (max-width: 1002px) {
+    font-size: 1.2rem;
+  }
+  @media screen and (max-width: 725px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 650px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const SubTotal = () => {
@@ -93,7 +104,6 @@ const SubTotal = () => {
           });
 
           if (isMounted) {
-            console.log(price.toLocaleString());
             setTotalExpense(price.toLocaleString());
             setTotalItem(arr.length);
           }
@@ -151,10 +161,7 @@ const SubTotal = () => {
         <Content>衣服件數</Content>
       </TotalDiv>
       <TotalDiv>
-        <Total>
-          {totalExpense}
-          {/* <CountUp onEnd={() => console.log({ totalExpense })} /> */}
-        </Total>
+        <Total>{totalExpense}</Total>
         <Content>總共花費</Content>
       </TotalDiv>
       <TotalDiv>

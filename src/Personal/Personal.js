@@ -14,18 +14,23 @@ import { EmptyContainer } from "../Style/PersonalCSS";
 const BigDiv = styled.div`
   display: flex;
   justify-content: space-around;
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 
 const Container = styled.div`
   position: relative;
-  margin-top: 35px;
-  margin-left: 20px;
+  margin: 35px 20px;
   display: flex;
   flex-direction: column;
   width: 900px;
   height: 830px;
   @media screen and (max-width: 1440px) {
     height: 540px;
+  }
+  @media screen and (max-width: 900px) {
+    width: 95%;
   }
 `;
 
@@ -74,10 +79,14 @@ const ProfileDiv = styled.div`
   flex-direction: column;
   align-items: center;
   color: #31342dd6;
-  /* background-color: #f3d5ca; */
+  @media screen and (max-width: 900px) {
+    margin: auto auto 25px;
+    width: 50%;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 15px;
+  }
 `;
-
-const SetDiv = styled(ProfileDiv)``;
 
 const ProfileImg = styled.div`
   width: 120px;
@@ -91,7 +100,7 @@ const Button = styled.div`
   line-height: 1.6em;
   color: #31342d5c;
   cursor: pointer;
-  width: 65% !important;
+  width: 75px;
   border-radius: 15px;
   margin: 8px auto 3px auto;
   padding: auto 5px;
@@ -155,11 +164,12 @@ const Personal = () => {
               style={{ width: "100%", height: "100%" }}
             />
           </ProfileImg>
-          <UserInfo>Hi, {userName}</UserInfo>
-          <UserInfo>{userEmail}</UserInfo>
-          <Button onClick={() => signOut()}>Log Out</Button>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <UserInfo>Hi, {userName}</UserInfo>
+            <UserInfo>{userEmail}</UserInfo>
+            <Button onClick={() => signOut()}>Log Out</Button>
+          </div>
         </ProfileDiv>
-        <SetDiv></SetDiv>
 
         <Container>
           <Title
@@ -180,7 +190,6 @@ const Personal = () => {
           </Title1>
           <Title2
             to="/Personal/myexpense"
-            // click={btnStatus}
             onClick={() => {
               setBtnStatus("expenseDiv");
             }}

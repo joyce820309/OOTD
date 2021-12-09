@@ -156,8 +156,6 @@ const Header = () => {
   const [initMsgLength, setInitMsgLength] = useState(0);
   const [status, setStatus] = useState("homepage");
 
-  console.log(msgLength);
-
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       setIsUser(user);
@@ -186,11 +184,9 @@ const Header = () => {
 
           if (isMounted) {
             setAllExchange(data);
-            console.log("real", data.length);
             setMsgLength(data.length);
             if (once) {
               setInitMsgLength(data.length);
-              console.log("init:", data.length);
 
               setOnece(false);
             }
@@ -214,8 +210,6 @@ const Header = () => {
     allExchange.map((data) => {
       return arr.push(data.id);
     });
-
-    console.log(arr);
 
     arr.map((item) => {
       firebase

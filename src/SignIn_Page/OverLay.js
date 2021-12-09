@@ -44,18 +44,12 @@ const P = styled.p`
   margin: 20px 0 30px;
 `;
 
-// const Button = styled.button`
-//   background-color: transparent;
-//   border-color: #ffffff;
-// `;
-
 const BackgroundRight = styled.div`
   position: absolute;
   width: 78%;
   height: 45%;
   bottom: 124px;
   right: 0;
-  /* background-color: #bff5e438; */
   z-index: -1;
 `;
 

@@ -1,4 +1,4 @@
-export const calaulateExp = (money, budget, expense, setRemain) => {
-  money = Number(budget - expense);
-  setRemain(money);
+export const calaulateExp = (budget, expense) => {
+  let money = Number(budget - expense);
+  return money;
 };

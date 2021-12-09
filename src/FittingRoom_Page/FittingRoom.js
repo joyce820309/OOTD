@@ -81,9 +81,6 @@ const FittingRoom = () => {
     setDate(Number(selectDate.getDate()));
   }, [selectDate]);
 
-  console.log(month);
-  console.log(date);
-
   useEffect(() => {
     const modified = { drop: dropImg };
     if (Object.keys(canvas).length) {
@@ -172,7 +169,6 @@ const FittingRoom = () => {
 
     //在獲取檔案之後，使用 FileReader 讀取檔案之後接著創造一個 Image，這樣我們就成功拿到選取的圖片資訊
     const newFileReader = new FileReader();
-    console.log(newFileReader.readyState);
   };
 
   const initCanvas = () =>
@@ -246,7 +242,6 @@ const FittingRoom = () => {
       imgDragOffset.offsetX = e.clientX - e.target.offsetLeft;
       imgDragOffset.offsetY = e.clientY - e.target.offsetTop;
       movingImage = e.target;
-      console.log("走完saveImg都沒事", movingImage);
     }
   };
 
@@ -448,11 +443,9 @@ const FittingRoom = () => {
                         <InputNum
                           style={{ "-webkit-appearance": "none" }}
                           type="number"
-                          // placeholder="記得輸入金額唷！"
                           value={price}
                           onChange={(e) => {
                             setPrice(Number(e.target.value));
-                            console.log(typeof Number(e.target.value));
                           }}
                         />
                       </Div>
@@ -464,7 +457,6 @@ const FittingRoom = () => {
                           selected={selectDate}
                           onChange={(e) => {
                             setSelectDate(e);
-                            console.log(e);
                           }}
                           maxDate={new Date()}
                         />
