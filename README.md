@@ -1,6 +1,6 @@
 # OOTD- Outfit Of The Day
 
-## <img src="./src/img/OOTD.png" width=22/> Website Link
+## <img src="./src/img/OOTD.png" width=25/> Website Link
 
 - **Website Link :** https://side-project-d1344.web.app/
 
