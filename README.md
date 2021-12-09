@@ -2,7 +2,7 @@
 
 <img src="./src/img/OOTDLogo.png" width=20%/>
 
-## <img src="./src/img/OOTD.png" width=3.8%/> Website Link
+## <img src="./src/img/OOTD.png" width=4%/> Website Link
 
 - **Website Link :** https://side-project-d1344.web.app/
 
