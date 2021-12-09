@@ -49,7 +49,6 @@ const FindNewDress = () => {
   const [min, setMin] = useState("");
   const phoneRegular = /^[0]{1}[9]{1}[0-9]{8}/;
 
-
   const Toast = Swal.mixin({
     toast: true,
     position: "top",
@@ -97,13 +96,7 @@ const FindNewDress = () => {
   }, [isUser]);
 
   const sumbitForm = (e, item, id) => {
-
-    if (
-      userName === "" ||
-      userPhone === "" ||
-      e.target.value.match(!phoneRegular) ||
-      userAddress === ""
-    ) {
+    if (userName === "" || userPhone === "" || userAddress === "") {
       Toast.fire({
         icon: "warning",
         title: "記得將表單填寫完整唷！",

@@ -8,8 +8,7 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 30%;
-  outline: 1px tomato solid;
-  margin-bottom: 20%;
+  margin-bottom: 40px;
 `;
 
 const BudgetDiv = styled.div`
@@ -67,8 +66,6 @@ const EditBudget = () => {
           if (isMounted) {
             setBudget(doc.data().budget);
             setRemain(doc.data().remaining);
-
-            console.log(Math.abs(doc.data().budget - doc.data().remaining));
           }
         });
     }
@@ -89,7 +86,6 @@ const EditBudget = () => {
         .onSnapshot((snapshot) => {
           const data = [];
           snapshot.forEach((doc) => {
-            console.log(doc.data().MM, realMonth);
             if (
               parseInt(doc.data().MM) === parseInt(realMonth) &&
               doc.data().itemExpense !== undefined
@@ -113,9 +109,8 @@ const EditBudget = () => {
   }, [isUser]);
 
   const calculate = () => {
-    let money;
-    calaulateExp(money, budget, expense, setRemain);
-
+    const remainMoney = calaulateExp(budget, expense);
+    setRemain(remainMoney);
     firebase
       .firestore()
       .collection("users")
@@ -123,7 +118,7 @@ const EditBudget = () => {
       .update(
         {
           budget: Number(budget),
-          remaining: Number(money),
+          remaining: Number(remainMoney),
         },
         { merge: true }
       )
@@ -154,7 +149,7 @@ const EditBudget = () => {
       ) : (
         <BudgetDiv>
           {budget === 0 ? (
-            <Span>目前預算是0元，快設定本月治裝預算吧!!</Span>
+            <Span>目前預算是0元，快設定本月治裝預算吧！</Span>
           ) : (
             <Span>
               這個月的治裝費預算：

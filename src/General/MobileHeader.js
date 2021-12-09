@@ -73,12 +73,6 @@ const CloseDiv = styled.div`
 const Mobile = () => {
   const [display, setDisplay] = useState(false);
 
-  // useEffect(() => {
-  //   firebase.auth().onAuthStateChanged((user) => {
-  //     setIsUser(user);
-  //   });
-  // }, []);
-
   const displayControl = () => {
     if (display) {
       setDisplay(false);

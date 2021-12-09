@@ -15,7 +15,6 @@ const TagAll = () => {
   const [renderAll, setRenderAll] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(renderAll);
   useEffect(() => {
     let isMounted = true;
 

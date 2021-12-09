@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import "firebase/auth";
 import firebase from "../utils/firebase";
+import { EmptyDiv } from "../Style/FittingCSS";
 
 const NoticeDiv = styled.div`
   position: absolute;
@@ -64,7 +65,6 @@ const Notice = () => {
         .doc(isUser.email)
         .collection("exchangeItems")
         .orderBy("exchangeTime", "desc")
-        // .limit(6)
         .onSnapshot((snapshot) => {
           const data = snapshot.docs
             .map((doc) => {
@@ -76,7 +76,6 @@ const Notice = () => {
               );
             });
           if (isMounted) {
-            console.log(data);
             setExchangeCollection(data);
           }
         });
@@ -89,23 +88,29 @@ const Notice = () => {
   return (
     <>
       <NoticeDiv>
-        {exchangeCollection.map((exchange, e) => (
+        {exchangeCollection.length === 0 ? (
+          <EmptyDiv>訊息欄是空的唷！</EmptyDiv>
+        ) : (
           <>
-            <NewsText to="/Personal/mycloset">
-              <span
-                style={{
-                  fontWeight: "800",
-                  fontSize: "0.9rem",
-                  marginRight: "0.4rem",
-                }}
-              >
-                {exchange.data.userName}
-              </span>
-              想要跟你交換衣服，快去「我の檔案」確認看看吧！
-            </NewsText>
-            {/* <div>X</div> */}
+            {exchangeCollection.map((exchange, e) => (
+              <>
+                <NewsText to="/Personal/mycloset">
+                  <span
+                    style={{
+                      fontWeight: "800",
+                      fontSize: "0.9rem",
+                      marginRight: "0.4rem",
+                    }}
+                  >
+                    {exchange.data.userName}
+                  </span>
+                  想要跟你交換衣服，快去「我の檔案」確認看看吧！
+                </NewsText>
+                {/* <div>X</div> */}
+              </>
+            ))}
           </>
-        ))}
+        )}
       </NoticeDiv>
     </>
   );

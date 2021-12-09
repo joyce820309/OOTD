@@ -142,7 +142,6 @@ const PopupAddItem = (
                     value={price}
                     onChange={(e) => {
                       setPrice(Number(e.target.value));
-                      console.log(typeof Number(e.target.value));
                     }}
                   />
                 </Div>

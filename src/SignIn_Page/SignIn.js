@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import styled from "styled-components";
+import React, { useState } from "react";
+// import ReactDOM from "react-dom";
+// import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { facebookProvider } from "./SocialMediaAuth";
+// import { facebookProvider } from "./SocialMediaAuth";
 import { googleProvider } from "./SocialMediaAuth";
 import Auth from "./Auth";
 import firebase from "../utils/firebase";
@@ -25,21 +25,15 @@ library.add(faGoogle);
 
 const SignIn = () => {
   const history = useHistory();
-  // const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  // const [allUsers, setAllUsers] = useState("");
 
   const onSubmit = () => {
-    console.log("進來囉");
-
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        var user = userCredential;
-        console.log(user);
         history.push("/FittingRoom");
       })
       .catch((error) => {
@@ -58,24 +52,8 @@ const SignIn = () => {
       });
   };
 
-  // useEffect(() => {
-  //   firebase
-  //     .firestore()
-  //     .collectionGroup("users")
-  //     .onSnapshot((snapshot) => {
-  //       const data = snapshot.docs.map((doc) => {
-  //         return doc.data();
-  //       });
-
-  //       setAllUsers(data);
-  //     });
-  // }, []);
-
-  // console.log(allUsers);
-
   const handleSocialMedia = async (provider) => {
     const res = await Auth(provider);
-    console.log(res);
 
     firebase
       .firestore()
@@ -130,7 +108,6 @@ const SignIn = () => {
           }}
         />
         {errorMsg && <ErrDiv>{errorMsg}</ErrDiv>}
-        {/* <A href="#">Forgot your password?</A> */}
         <button onClick={onSubmit}>Sign In</button>
       </Form>
     </div>

@@ -93,7 +93,6 @@ const SignUp = ({ close }) => {
 
   const handleSocialMedia = (provider) => {
     const res = Auth(provider);
-    console.log(res);
 
     firebase.firestore().collection("users").doc().set({
       name: firebase.auth().currentUser.displayName,
@@ -106,7 +105,6 @@ const SignUp = ({ close }) => {
   };
 
   const onSubmit = (e) => {
-    console.log("進來囉");
     e.preventDefault();
     firebase
       .auth()
