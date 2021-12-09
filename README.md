@@ -73,7 +73,7 @@ You can also create your own native account <br />
 - Fill in the infomation of exchange and check it on Find new dress page
   <br />
 
-<img src="./src/img/exchange.gif" width=100%/>
+<img src="./src/img/exchangeItem.gif" width=100%/>
 
 ## Future Features
 
