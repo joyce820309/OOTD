@@ -28,10 +28,13 @@ const TagBox = styled.div`
   @media screen and (max-width: 900px) {
     display: none;
   }
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
 `;
 
 const MobileTagBox = styled.div`
-  /* display: none; */
+  display: none;
 
   @media screen and (max-width: 900px) {
     display: flex;
@@ -56,7 +59,8 @@ const Tag = styled.div`
   &:hover {
     opacity: 1;
   }
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 945px) {
+    font-size: 0.8rem;
   }
 `;
 
@@ -117,6 +121,9 @@ const ImgDiv = styled.div`
   border-radius: 50px;
   display: flex;
   justify-content: center;
+  @media screen and (max-width: 945px) {
+    height: 160px;
+  }
 `;
 const AddBtn = styled.div`
   background-color: #a9dbe596;
@@ -126,16 +133,19 @@ const AddBtn = styled.div`
   cursor: pointer;
   border-radius: 50px;
   margin: 8px auto 3px auto;
-  padding: 10px 18px;
-  font-size: 18px;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
   font-weight: 600;
   position: absolute;
   right: 32px;
   bottom: 29px;
-  /* box-shadow: 1px -1px 10px 2px #91b8bdd6; */
   &:hover {
     transform: scale(1.2) !important;
     background-color: #f3d5ca;
+  }
+  @media screen and (max-width: 945px) {
+    font-size: 0.8rem;
+    padding: 0.6rem 0.9rem;
   }
 `;
 
@@ -244,9 +254,9 @@ const ClosetBox = styled.div`
     height: 540px;
     top: -10px;
   }
-  @media screen and (max-width: 1165px) {
-    width: 650px;
-    margin: 25px auto 20px 20px;
+  @media screen and (max-width: 1245px) {
+    width: 620px;
+    margin: 20px;
   }
 `;
 
@@ -278,6 +288,18 @@ const ImgsetBox = styled.div`
 const ImgBox = styled.div`
   display: flex;
   flex-wrap: wrap;
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
+`;
+
+const MobileImgBox = styled.div`
+  /* display: none;
+
+  @media screen and (max-width: 900px) {
+    display: flex;
+    flex-wrap: wrap;
+  } */
 `;
 
 const ClosetTitleDiv = styled.div`
@@ -297,8 +319,11 @@ const ClosetTitleDiv = styled.div`
 const MirrorTitleDiv = styled(ClosetTitleDiv)`
   background-color: #edc4b4c2;
   transform: rotate(-2.3deg);
-  top: -35px;
   left: 10px;
+  top: 15px;
+  @media screen and (max-width: 1440px) {
+    top: -35px;
+  }
 `;
 
 const ClosetTitle = styled.div`
@@ -416,6 +441,7 @@ export {
   ClosetBox,
   ImgsetBox,
   ImgBox,
+  MobileImgBox,
   MirrorTitleDiv,
   ClosetTitle,
   ItemForm,

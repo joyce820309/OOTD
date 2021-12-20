@@ -24,7 +24,7 @@ const Container = styled.div`
 
 const SectionBG = styled.div`
   background-color: #f5d1c36e;
-  height: 510px;
+  height: 453px;
   width: 100%;
   position: absolute;
   top: 10px;
@@ -34,7 +34,7 @@ const SectionBG = styled.div`
 const Section1 = styled.div`
   display: flex;
   justify-content: center;
-  padding-top: 110px;
+  padding-top: 30px;
 `;
 
 const TextDiv = styled.div`
@@ -42,6 +42,14 @@ const TextDiv = styled.div`
   flex-direction: column;
   width: 300px;
   margin-left: 80px;
+  @media screen and (max-width: 1160px) {
+    width: 230px;
+    margin-left: 40px;
+  }
+  @media screen and (max-width: 581px) {
+    width: 180px;
+    margin-left: 10px;
+  }
 `;
 
 const Button = styled.div`
@@ -52,11 +60,14 @@ const Button = styled.div`
   cursor: pointer;
   width: 40% !important;
   margin: 0 auto;
-  font-size: 19px;
+  font-size: 1rem;
   font-weight: 600;
   &:hover {
     transform: scale(1.2) !important;
     background-color: #ffdd759e;
+  }
+  @media screen and (max-width: 581px) {
+    font-size: 0.7rem;
   }
 `;
 
@@ -73,6 +84,25 @@ const SignBody = styled.div`
 const BedroomDiv = styled.div`
   z-index: 15;
   margin-left: -150px;
+  width: 360px;
+  display: flex;
+  align-items: center;
+  @media screen and (max-width: 1160px) {
+    width: 320px;
+  }
+  @media screen and (max-width: 1025px) {
+    width: 270px;
+  }
+  @media screen and (max-width: 725px) {
+    width: 230px;
+    margin-left: 0;
+  }
+  @media screen and (max-width: 581px) {
+    width: 180px;
+  }
+  @media screen and (max-width: 445px) {
+    width: 120px;
+  }
 `;
 
 const TypingDiv = styled.div`
@@ -90,7 +120,6 @@ const Typing = styled.p`
   border-right: 2px solid transparent;
   animation: typing 2s steps(6, end), blink-caret 0.75s step-end infinite;
   overflow: hidden;
-  /* height: 160px; */
   /* 列印效果 */
   @keyframes typing {
     from {
@@ -110,6 +139,12 @@ const Typing = styled.p`
       box-shadow: 1px 0 0 0;
     }
   }
+  @media screen and (max-width: 1160px) {
+    font-size: 35px;
+  }
+  @media screen and (max-width: 581px) {
+    font-size: 20px;
+  }
 `;
 
 const StyledPopup = styled(Popup)`
@@ -117,9 +152,10 @@ const StyledPopup = styled(Popup)`
     background: rgba(0, 0, 0, 0.6);
   }
   &-content {
-    /* background: rgb(255, 255, 255); */
-    /* display: flex; */
     border-radius: 25px;
+  }
+  @media screen and (max-width: 830px) {
+    font-size: 20px;
   }
 `;
 
@@ -135,12 +171,37 @@ const SmallImg = styled.img`
   margin-top: 30px;
   width: 180px;
   box-shadow: 0 1px 8px 0 rgb(34 36 38 / 18%);
+  transform: rotate(-4.8deg);
+  marginright: -5px;
+  @media screen and (max-width: 1160px) {
+    width: 160px;
+  }
+  @media screen and (max-width: 1025px) {
+    width: 120px;
+  }
+  @media screen and (max-width: 725px) {
+    width: 80px;
+  }
+  @media screen and (max-width: 581px) {
+    width: 55px;
+  }
+`;
+
+const SmallImg1 = styled(SmallImg)`
+  transform: rotate(-2deg);
+`;
+
+const SmallImg2 = styled(SmallImg)`
+  transform: rotate(4.8deg);
 `;
 
 const Section2 = styled.div`
   position: relative;
   display: flex;
   margin-top: 35px;
+  @media screen and (max-width: 570px) {
+    flex-direction: column-reverse;
+  }
 `;
 const ImgDiv = styled.div`
   /* position: absolute; */
@@ -150,12 +211,16 @@ const ImgDiv = styled.div`
 `;
 const BlueDiv = styled.div`
   position: absolute;
-  left: 350px;
+  /* left: 350px; */
+  right: -30px;
+  top: -70px;
   background-color: #c4d7d19c;
   z-index: -1;
-  width: 620px;
-  height: 430px;
+  width: 65%;
   height: 100%;
+  @media screen and (max-width: 575px) {
+    /* left: 165px; */
+  }
 `;
 
 const ComboImg = styled.img`
@@ -163,8 +228,26 @@ const ComboImg = styled.img`
   transform: rotate(-3deg);
   margin: 30px;
   @media screen and (max-width: 1100px) {
-    width: 400px;
+    width: 350px;
     margin: 10px;
+  }
+  @media screen and (max-width: 836px) {
+    width: 300px;
+  }
+  @media screen and (max-width: 718px) {
+    width: 200px;
+  }
+  @media screen and (max-width: 445px) {
+    width: 120px;
+  }
+`;
+
+const ContentDivBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto 40px 30px;
+  @media screen and (max-width: 836px) {
+    margin: 10px auto 20px 10px;
   }
 `;
 
@@ -178,13 +261,15 @@ const ContextText = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 25px;
-  /* font-family: "Chilanka"; */
-  font-size: 19px;
+  font-size: 1rem;
   line-height: 1.5em;
   font-weight: 400;
   color: #5c6260e6;
-  @media screen and (max-width: 1100px) {
-    font-size: 17px;
+  @media screen and (max-width: 925px) {
+    font-size: 0.8rem;
+  }
+  @media screen and (max-width: 445px) {
+    font-size: 0.6rem;
   }
 `;
 
@@ -196,6 +281,14 @@ const ContentImg1 = styled.img`
     width: 220px;
     height: 220px;
   }
+  @media screen and (max-width: 900px) {
+    width: 150px;
+    height: 150px;
+  }
+  @media screen and (max-width: 445px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 const ContentImg2 = styled.img`
   width: 280px;
@@ -203,6 +296,14 @@ const ContentImg2 = styled.img`
   @media screen and (max-width: 1100px) {
     width: 220px;
     height: 220px;
+  }
+  @media screen and (max-width: 900px) {
+    width: 150px;
+    height: 150px;
+  }
+  @media screen and (max-width: 445px) {
+    width: 100px;
+    height: 100px;
   }
 `;
 
@@ -212,7 +313,6 @@ function IndexPage() {
   const [isUser, setIsUser] = useState(null);
   const user = useSelector((state) => state.user);
   const [toggleClassName, setClassName] = useState("container");
-  const [userName, setUserName] = useState(null);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -249,7 +349,7 @@ function IndexPage() {
             src={badroom}
             alt="bedroom"
             data-aos="zoom-in"
-            style={{ width: "360px", opacity: "0.78" }}
+            style={{ width: "100%", opacity: "0.78" }}
           />
         </BedroomDiv>
 
@@ -278,29 +378,9 @@ function IndexPage() {
             )}
 
             <SmallImgDiv data-aos="zoom-in-left">
-              <SmallImg
-                src={small1}
-                alt="small-pic"
-                style={{
-                  transform: "rotate(-4.8deg)",
-                  marginRight: "-5px",
-                }}
-              />
-              <SmallImg
-                src={small2}
-                alt="small-pic"
-                style={{
-                  transform: "rotate(-2deg)",
-                }}
-              />
-              <SmallImg
-                src={small3}
-                alt="small-pic"
-                style={{
-                  transform: "rotate(4.8deg)",
-                  // marginRight: "-5px",
-                }}
-              />
+              <SmallImg src={small1} alt="small-pic" />
+              <SmallImg1 src={small2} alt="small-pic" />
+              <SmallImg2 src={small3} alt="small-pic" />
             </SmallImgDiv>
           </div>
         </TextDiv>
@@ -310,13 +390,7 @@ function IndexPage() {
           <ComboImg src={combo} alt="" />
         </ImgDiv>
         <BlueDiv />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            margin: "20px auto 40px 30px",
-          }}
-        >
+        <ContentDivBox>
           <ContentDiv>
             <ContextText>
               Fashion is about dressing according to what’s fashionable. Style
@@ -332,7 +406,7 @@ function IndexPage() {
               Wang
             </ContextText>
           </ContentDiv>
-        </div>
+        </ContentDivBox>
       </Section2>
     </Container>
   );

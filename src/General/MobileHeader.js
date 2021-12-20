@@ -12,7 +12,7 @@ const MobileHeader = styled.div`
     align-items: center;
     font-weight: 400;
     box-shadow: 0 1px 8px 0 rgb(34 36 38 / 18%);
-    min-height: 50px;
+    height: 80px;
     background: #efbf73;
     position: fixed;
     top: 0;
@@ -51,6 +51,8 @@ const NavbarDiv = styled.div`
   }
 `;
 
+const IndexLink = styled(Link)``;
+
 const NavLink = styled(Link)`
   color: #ddb578;
   text-decoration: none;
@@ -83,12 +85,22 @@ const Mobile = () => {
 
   return (
     <>
-      <MobileHeader
-        onClick={() => {
-          displayControl();
-        }}
-      >
-        ☰
+      <MobileHeader>
+        <div
+          onClick={() => {
+            displayControl();
+          }}
+        >
+          ☰
+        </div>
+
+        <IndexLink to="/">
+          <img
+            src={logo}
+            alt="logo"
+            style={{ width: "75px", marginRight: "35px" }}
+          />
+        </IndexLink>
       </MobileHeader>
 
       {display ? (
@@ -104,7 +116,7 @@ const Mobile = () => {
               <NavLink to="/FindNewDress">幫衣服找新家</NavLink>
             </NavbarDiv>
             <NavbarDiv>
-              <NavLink to="/Personal">我の檔案</NavLink>
+              <NavLink to="/Personal/mycloset">我の檔案</NavLink>
             </NavbarDiv>
           </MobileDiv>
         </>

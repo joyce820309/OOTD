@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import firebase from "../utils/firebase";
-import WebFont from "webfontloader";
-
+import { useSelector } from "react-redux";
+import AnimatedNumbers from "react-animated-numbers";
+import Loading from "../General/Loading";
 import "firebase/auth";
 
 const Container = styled.div`
@@ -11,20 +12,32 @@ const Container = styled.div`
   width: 100%;
   height: 25%;
   margin: 5px auto;
+  @media screen and (max-width: 441px) {
+    flex-wrap: wrap;
+    height: 50%;
+  }
 `;
 const TotalDiv = styled.div`
-  width: 22%;
+  width: 20%;
+  height: 8rem;
   background-color: #fffafab5;
   border-radius: 5px;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 441px) {
+    width: 45%;
+    margin-top: 8px;
+  }
 `;
 const Total = styled.div`
-  font-size: 3rem;
+  font-size: 2.8rem;
   font-weight: 900;
   color: #779ab7;
+  @media screen and (max-width: 725px) {
+    font-size: 2rem;
+  }
 `;
 const Content = styled.div`
   color: #515d6087;
@@ -40,7 +53,7 @@ const Content = styled.div`
   bottom: 5px;
   padding-left: 12px;
   border-radius: 3px;
-  @media screen and (max-width: 1055px) {
+  @media screen and (max-width: 1074px) {
     font-size: 1.5rem;
   }
   @media screen and (max-width: 1002px) {
@@ -48,9 +61,15 @@ const Content = styled.div`
   }
   @media screen and (max-width: 725px) {
     font-size: 1rem;
+    letter-spacing: 0.08rem;
+    width: 90%;
   }
-  @media screen and (max-width: 650px) {
+  @media screen and (max-width: 550px) {
     font-size: 0.8rem;
+    width: 96%;
+  }
+  @media screen and (max-width: 459px) {
+    font-size: 0.4rem;
   }
 `;
 
@@ -59,23 +78,8 @@ const SubTotal = () => {
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalSend, setTotalSend] = useState(0);
   const [totalGet, setTotalGet] = useState(0);
-  const [isUser, setIsUser] = useState(null);
-
-  useEffect(() => {
-    WebFont.load({
-      google: {
-        families: ["Droid Sans", "Chilanka"],
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsUser(user);
-      }
-    });
-  }, [isUser]);
+  const isUser = useSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -104,8 +108,9 @@ const SubTotal = () => {
           });
 
           if (isMounted) {
-            setTotalExpense(price.toLocaleString());
+            setTotalExpense(price);
             setTotalItem(arr.length);
+            setIsLoading(false);
           }
         });
     }
@@ -155,24 +160,73 @@ const SubTotal = () => {
   }, [isUser]);
 
   return (
-    <Container>
-      <TotalDiv>
-        <Total>{totalItem}</Total>
-        <Content>衣服件數</Content>
-      </TotalDiv>
-      <TotalDiv>
-        <Total>{totalExpense}</Total>
-        <Content>總共花費</Content>
-      </TotalDiv>
-      <TotalDiv>
-        <Total>{totalGet}</Total>
-        <Content>交換件數</Content>
-      </TotalDiv>
-      <TotalDiv>
-        <Total>{totalSend}</Total>
-        <Content>送出件數</Content>
-      </TotalDiv>
-    </Container>
+    <>
+      <Container>
+        <TotalDiv>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <Total>
+              <AnimatedNumbers
+                animateToNumber={totalItem}
+                configs={(number, index) => {
+                  return { mass: 2, tension: 200 * (index + 1), friction: 70 };
+                }}
+              ></AnimatedNumbers>
+            </Total>
+          )}
+
+          <Content>衣服件數</Content>
+        </TotalDiv>
+        <TotalDiv>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <Total>
+              <AnimatedNumbers
+                includeComma
+                animateToNumber={totalExpense}
+                configs={(number, index) => {
+                  return { mass: 2, tension: 200 * (index + 1), friction: 70 };
+                }}
+              ></AnimatedNumbers>
+            </Total>
+          )}
+          <Content>總共花費</Content>
+        </TotalDiv>
+        <TotalDiv>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <Total>
+              <AnimatedNumbers
+                animateToNumber={totalGet}
+                configs={(number, index) => {
+                  return { mass: 2, tension: 200 * (index + 1), friction: 70 };
+                }}
+              ></AnimatedNumbers>
+            </Total>
+          )}
+          <Content>交換件數</Content>
+        </TotalDiv>
+
+        <TotalDiv>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <Total>
+              <AnimatedNumbers
+                animateToNumber={totalSend}
+                configs={(number, index) => {
+                  return { mass: 2, tension: 200 * (index + 1), friction: 70 };
+                }}
+              ></AnimatedNumbers>
+            </Total>
+          )}
+          <Content>送出件數</Content>
+        </TotalDiv>
+      </Container>
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ const SocialContainer = styled.div`
   margin: 20px 0;
   cursor: pointer;
   color: #4e4949;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   width: 76%;
   padding: 5px;
   border-bottom: 4px solid #eee;

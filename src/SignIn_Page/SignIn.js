@@ -25,8 +25,8 @@ library.add(faGoogle);
 
 const SignIn = () => {
   const history = useHistory();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@test.com");
+  const [password, setPassword] = useState("test123");
   const [errorMsg, setErrorMsg] = useState("");
 
   const onSubmit = () => {
@@ -89,7 +89,7 @@ const SignIn = () => {
           <SocialA href="#">
             <FontAwesomeIcon style={{ color: "#70604c" }} icon={faGoogle} />
           </SocialA>
-          Use your Google Account
+          Use Google Account
         </SocialContainer>
         <Input
           type="email"

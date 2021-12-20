@@ -40,6 +40,7 @@ import {
   ClosetBox,
   ImgsetBox,
   ImgBox,
+  MobileImgBox,
   MirrorTitleDiv,
   ClosetTitle,
   ItemForm,
@@ -185,14 +186,15 @@ const FittingRoom = () => {
   };
 
   const handleSave = (e) => {
+    canvas.discardActiveObject().renderAll();
     const item = firebase
       .firestore()
       .collection("users")
       .doc(isUser.email)
       .collection("items")
       .doc();
-    let canvas = document.getElementById("canvas");
-    let dataUrl = canvas.toDataURL();
+    let canvasEle = document.getElementById("canvas");
+    let dataUrl = canvasEle.toDataURL();
     let ref = firebase.storage().ref("diaryImages/" + item.id); //傳入filebase的路徑位置
 
     ref.putString(dataUrl, "data_url").then((snapshot) => {
@@ -344,6 +346,7 @@ const FittingRoom = () => {
                 <Loading />
               </div>
             ) : null}
+
             <ImgBox id="imgset" onMouseDown={(e) => saveImg(e)}>
               {filerStatus === "all" ? <TagAll /> : null}
               {filerStatus === "clothes" ? <Tags tag={"clothes"} /> : null}
@@ -352,6 +355,15 @@ const FittingRoom = () => {
               {filerStatus === "shoes" ? <Tags tag={"shoes"} /> : null}
               {filerStatus === "accessary" ? <Tags tag={"accessary"} /> : null}
             </ImgBox>
+            {/* 
+            <MobileImgBox id="imgset" onClick={(e) => addImg(e)}>
+              {filerStatus === "all" ? <TagAll /> : null}
+              {filerStatus === "clothes" ? <Tags tag={"clothes"} /> : null}
+              {filerStatus === "pants" ? <Tags tag={"pants"} /> : null}
+              {filerStatus === "skirt" ? <Tags tag={"skirt"} /> : null}
+              {filerStatus === "shoes" ? <Tags tag={"shoes"} /> : null}
+              {filerStatus === "accessary" ? <Tags tag={"accessary"} /> : null}
+            </MobileImgBox> */}
 
             <StyledPopup modal trigger={<AddBtn>+</AddBtn>}>
               {(close) => (
@@ -413,6 +425,7 @@ const FittingRoom = () => {
                           onChange={(e) => setItemSize(e.target.value)}
                         >
                           <option>選一個</option>
+                          <option value="F">F</option>
                           <option value="XXS">XXS</option>
                           <option value="XS">XS</option>
                           <option value="S">S</option>

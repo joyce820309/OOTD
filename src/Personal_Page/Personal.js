@@ -51,18 +51,32 @@ const Title = styled(Link)`
   &:hover {
     transform: scale(1.16);
   }
+    @media screen and (max-width: 768px) {
+    font-size: 0.7rem;
+    top: -52px;
+  }
+    @media screen and (max-width: 365px) {
+    left: -20px;
+  }
 `;
 
 const Title1 = styled(Title)`
   left: 86px;
   background-color: ${(props) =>
-    props.click === "exchangeDiv" ? "#edc4b4" : "#edc4b4a1"};
+  props.click === "exchangeDiv" ? "#edc4b4" : "#edc4b4a1"};
   color: #31342d5c;
   z-index: 0;
   padding: 10px 12px 18px 12px;
   top: -65px;
   transform: rotate(-1.2deg);
   z-index: ${(props) => (props.click === "exchangeDiv" ? 10 : 0)};
+  @media screen and (max-width: 768px) {
+    top: -59px;
+    left: 69px;
+  }
+   @media screen and (max-width: 365px) {
+    left: 39px;
+  }
 `;
 
 const Title2 = styled(Title)`
@@ -72,6 +86,12 @@ const Title2 = styled(Title)`
   z-index: ${(props) => (props.click === "expenseDiv" ? 10 : 0)};
   color: #72674c9c;
   transform: rotate(1.8deg);
+    @media screen and (max-width: 768px) {
+    left: 161px;
+  }
+     @media screen and (max-width: 365px) {
+    left: 130px;
+  }
 `;
 
 const ProfileDiv = styled.div`
@@ -81,10 +101,15 @@ const ProfileDiv = styled.div`
   color: #31342dd6;
   @media screen and (max-width: 900px) {
     margin: auto auto 25px;
-    width: 50%;
+    width: 80%;
     flex-direction: row;
     justify-content: space-around;
     padding: 15px;
+  }
+    @media screen and (max-width: 365px) {
+    width: 100%;
+        justify-content: space-between;
+
   }
 `;
 
@@ -92,6 +117,10 @@ const ProfileImg = styled.div`
   width: 120px;
   height: 120px;
   border: 1px solid black;
+  @media screen and (max-width: 768px) {
+    width: 80px;
+    height: 80px;
+  }
 `;
 
 const Button = styled.div`
@@ -110,11 +139,17 @@ const Button = styled.div`
     transform: scale(1.2) !important;
     background-color: #ffdd759e;
   }
+  @media screen and (max-width: 768px) {
+    font-size: 0.7rem;
+  }
 `;
 
 const UserInfo = styled.div`
   margin: 10px auto 5px;
   font-weight: 700;
+  @media screen and (max-width: 768px) {
+    font-size: 0.7rem;
+  }
 `;
 
 const Personal = () => {

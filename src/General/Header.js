@@ -25,8 +25,6 @@ const HeaderDiv = styled.div`
   }
 `;
 
-const MobileList = styled.div;
-
 const IndexDiv = styled.div`
   display: flex;
   align-items: center;
@@ -41,6 +39,9 @@ const IndexDiv = styled.div`
 `;
 
 const Logo = styled.img`
+  height: 35px;
+  width: 125px;
+
   &:hover {
     opacity: 0.7;
     /* transform: scale(1.1); */
@@ -261,11 +262,7 @@ const Header = () => {
             </NavbarDiv>
             <IndexDiv>
               <IndexLink to="/">
-                <Logo
-                  src={logo}
-                  alt="logo"
-                  style={{ height: "35px", width: "125px" }}
-                />
+                <Logo src={logo} alt="logo" />
               </IndexLink>
             </IndexDiv>
             <NavbarDiv>
@@ -292,9 +289,7 @@ const Header = () => {
                 <BellDiv>
                   <img
                     ref={bell}
-                    onClick={() => {
-                      displayControl();
-                    }}
+                    onClick={displayControl}
                     src={Notification}
                     alt="Bell"
                     style={{ color: "#815e29", width: "25px" }}
@@ -304,9 +299,7 @@ const Header = () => {
                 <BellDiv>
                   <img
                     ref={bell}
-                    onClick={() => {
-                      displayControl();
-                    }}
+                    onClick={displayControl}
                     src={Notification}
                     alt="Bell"
                     style={{ color: "#815e29", width: "25px" }}
@@ -319,9 +312,7 @@ const Header = () => {
                 <BellDiv>
                   <img
                     ref={bell}
-                    onClick={() => {
-                      displayControl();
-                    }}
+                    onClick={displayControl}
                     src={Notification}
                     alt="Bell"
                     style={{ color: "#815e29", width: "25px" }}
@@ -330,7 +321,7 @@ const Header = () => {
               </>
             )}
 
-            {display ? <Notice /> : <></>}
+            {display && <Notice />}
           </HeaderDiv>
 
           <Mobile />
@@ -340,11 +331,7 @@ const Header = () => {
           <HeaderDiv>
             <IndexDiv>
               <IndexLink to="/">
-                <Logo
-                  src={logo}
-                  alt="logo"
-                  style={{ height: "35px", width: "125px" }}
-                />
+                <Logo src={logo} alt="logo" />
               </IndexLink>
             </IndexDiv>
           </HeaderDiv>

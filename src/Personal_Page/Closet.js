@@ -26,9 +26,9 @@ const MyCloset = () => {
   const [itemsCollection, setItemsCollection] = useState([]);
   const [exchangeCollection, setExchangeCollection] = useState([]);
   const [findId, setFindId] = useState("");
-  const [editName, setEditName] = useState(false);
-  const [editSize, setEditSize] = useState(false);
-  const [editInfo, setEditInfo] = useState(false);
+  const [isName, setIsName] = useState(false);
+  const [isSize, setIsSize] = useState(false);
+  const [isInfo, setIsInfo] = useState(false);
   const [name, setName] = useState("");
   const [size, setSize] = useState("");
   const [info, setInfo] = useState("");
@@ -98,11 +98,11 @@ const MyCloset = () => {
   };
 
   return (
-    <>
+    <ClosetContainer>
       {isLoading ? (
         <Loading />
       ) : (
-        <ClosetContainer>
+        <>
           {itemsCollection.length === 0 ? (
             <EmptyContainer>
               <EmptyDiv
@@ -132,12 +132,12 @@ const MyCloset = () => {
                     setSize={setSize}
                     setInfo={setInfo}
                     setFindId={setFindId}
-                    editName={editName}
-                    editSize={editSize}
-                    editInfo={editInfo}
-                    setEditName={setEditName}
-                    setEditSize={setEditSize}
-                    setEditInfo={setEditInfo}
+                    editName={isName}
+                    editSize={isSize}
+                    editInfo={isInfo}
+                    setEditName={setIsName}
+                    setEditSize={setIsSize}
+                    setEditInfo={setIsInfo}
                     isUser={isUser}
                   />
                   <StatusDone
@@ -167,9 +167,9 @@ const MyCloset = () => {
               ))}
             </>
           )}
-        </ClosetContainer>
+        </>
       )}
-    </>
+    </ClosetContainer>
   );
 };
 

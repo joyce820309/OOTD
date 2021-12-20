@@ -39,8 +39,8 @@ const LineChartForm = () => {
         data={data}
         margin={{
           top: 185,
-          right: 150,
-          left: 70,
+          right: 100,
+          left: 60,
           bottom: -20,
         }}
       >
