@@ -155,9 +155,11 @@ const SignUp = ({ close }) => {
               onClick={() => handleSocialMedia(googleProvider)}
             />
           </SocialA>
-          Use your Google Account
+          Use Google Account
         </SocialContainer>
-        <Span>or use your email for registration</Span>
+        <Span style={{ color: "#70604c" }}>
+          or use your email for registration
+        </Span>
         <Input
           type="text"
           placeholder="Name"

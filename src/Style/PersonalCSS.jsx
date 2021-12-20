@@ -31,6 +31,7 @@ const ClosetContainer = styled.div`
 
 const ExchangeContainer = styled(ClosetContainer)`
   background-color: #fbeae3;
+  padding: 15px;
   &::-webkit-scrollbar {
     width: 5px;
   }

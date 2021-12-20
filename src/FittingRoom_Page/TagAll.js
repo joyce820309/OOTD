@@ -64,7 +64,9 @@ const TagAll = () => {
                   alt="clothes"
                   crossOrigin="anonymous"
                   style={{
-                    maxHeight: "160px",
+                    // maxHeight: "160px",
+                    maxHeight: "100%",
+
                     maxWidth: "100%",
                     margin: "20px",
                     cursor: "grab",

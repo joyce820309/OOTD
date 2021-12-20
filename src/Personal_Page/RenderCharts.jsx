@@ -21,6 +21,9 @@ const PieTitle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media screen and (max-width: 575px) {
+    margin-top: 30px;
+  }
 `;
 
 const LabelDiv = styled.div`
@@ -34,10 +37,18 @@ const LabelDiv = styled.div`
   position: absolute;
   top: 80px;
   right: -60px;
-  width: 185px;
+  width: 60%;
   height: 45px !important;
   color: #69725d;
   border-radius: 3px;
+  @media screen and (max-width: 965px) {
+    font-size: 0.9rem;
+  }
+  @media screen and (max-width: 645px) {
+    font-size: 0.7rem;
+    top: 130px;
+    width: 70%;
+  }
 `;
 
 const ArrowDarkImg = styled.img`
@@ -45,20 +56,35 @@ const ArrowDarkImg = styled.img`
   top: 0px;
   left: 140px;
   position: absolute;
+  @media screen and (max-width: 1125px) {
+    left: 80px;
+  }
+  @media screen and (max-width: 965px) {
+    height: 80px;
+    top: 30px;
+  }
+  @media screen and (max-width: 645px) {
+    left: 60px;
+    top: 70px;
+  }
 `;
 
 const PieDiv = styled.div`
   width: 120px;
   height: 180px;
   border: dashed 4px #565d661f;
-  /* position: absolute;
-  bottom: -56px;
-  left: 409px; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 40px 80px 20px 20px;
+  @media screen and (max-width: 1095px) {
+    position: absolute;
+    bottom: 130px;
+    left: 300px;
+    width: 100px;
+    height: 160px;
+  }
 `;
 
 const PieCircle = styled.div`
@@ -92,24 +118,25 @@ const PieCircle4 = styled(PieCircle)`
 const PieText = styled.div`
   width: 50px;
   color: #606658;
+  @media screen and (max-width: 965px) {
+    font-size: 0.9rem;
+  }
+  @media screen and (max-width: 715px) {
+    font-size: 0.7rem;
+  }
 `;
 
-const LabelDiv2 = styled.div`
-  position: absolute;
-  font-size: 1.2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 800;
-  height: 45px !important;
-  border-radius: 3px;
-  /* top: 710px;
-  right: 100px; */
+const LabelDiv2 = styled(LabelDiv)`
+  top: 48px;
+  right: 100px;
   background-color: #ddd69cd4;
   color: #64624dd4;
-  width: 165px;
   transform: rotate(2.3deg);
-  height: 45px !important;
+  width: 60%;
+  @media screen and (max-width: 1065px) {
+    width: 56%;
+    right: 42px;
+  }
 `;
 
 const LineTitle = styled(PieTitle)`
@@ -117,11 +144,24 @@ const LineTitle = styled(PieTitle)`
 `;
 
 const ArrowImg = styled.img`
-  top: 32px;
-  right: 70px;
+  top: -5px;
+  right: 32px;
   height: 150px;
   margin-top: 25px;
   position: absolute;
+  @media screen and (max-width: 1065px) {
+    /* right: 70px; */
+    top: 80px;
+  }
+  @media screen and (max-width: 965px) {
+    height: 80px;
+    /* top: 30px; */
+  }
+  /* 
+  @media screen and (max-width: 645px) {
+    left: 60px;
+    top: 70px;
+  } */
 `;
 
 const RenderCharts = () => {

@@ -108,6 +108,15 @@ option {
   position: absolute;
 }
 
+@media screen and (max-width: 1400px) {
+  .recharts-wrapper {
+    height: 400px;
+  }
+  .recharts-surface {
+    width: 300;
+  }
+}
+
 /* FOR Canlender */
 .react-datepicker__day--selected {
   background-color: #f3d19efa;

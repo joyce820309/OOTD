@@ -418,7 +418,13 @@ export const putFullYearPriceToChart = (isUser, date, setData) => {
     });
 };
 
-export const putTagPriceToChart = (isUser, date, setPieData, setData) => {
+export const putTagPriceToChart = (
+  isUser,
+  date,
+  setPieData,
+  setData,
+  setIsLoading
+) => {
   firebase
     .firestore()
     .collection("users")
@@ -463,6 +469,7 @@ export const putTagPriceToChart = (isUser, date, setPieData, setData) => {
       }
       setPieData(dataArr);
       setData(data);
+      setIsLoading(false);
     });
 };
 
@@ -528,7 +535,7 @@ export const getAllItemCollection = (setAllItems) => {
     });
 };
 
-export const getOthersItem = (isUser, setExchangeDone) => {
+export const getOthersItem = (isUser, setExchangeDone, setIsLoading) => {
   firebase
     .firestore()
     .collection("users")
@@ -545,6 +552,7 @@ export const getOthersItem = (isUser, setExchangeDone) => {
             data.data.status === "done" && data.data.owner !== isUser.email
         );
       setExchangeDone(data);
+      setIsLoading(false);
     });
 };
 
