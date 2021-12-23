@@ -14,7 +14,7 @@ import AOS from "aos";
 import Popup from "reactjs-popup";
 import SignUp from "../SignIn_Page/SignUp";
 import SignIn from "../SignIn_Page/SignIn";
-import OverLay from "../SignIn_Page/OverLay";
+import OverLay from "../SignIn_Page/SignIndex";
 import "aos/dist/aos.css"; // You can also use <link> for styles
 import { useHistory } from "react-router-dom";
 

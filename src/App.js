@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import IndexPage from "./General/IndexPage";
-import FittingRoom from "./FittingRoom_Page/FittingRoom";
+import FittingRoom from "./FittingRoomPage/FittingRoom";
 import firebase from "./utils/firebase";
-import Diary from "./Dairy_Page/Diary";
-import FindNewDress from "./FindNewDress_Page/FindNewDress";
-import Personal from "./Personal_Page/Personal";
+import Diary from "./DairyPage/Diary";
+import FindNewDress from "./FindNewDressPage/FindNewDress";
+import Personal from "./PersonalPage/Personal";
 import WebFont from "webfontloader";
 import NotFound from "./General/NotFound";
 import Header from "./General/Header";

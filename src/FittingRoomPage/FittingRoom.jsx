@@ -251,10 +251,16 @@ const FittingRoom = () => {
   function dropImg(e) {
     const { offsetX, offsetY } = e.e;
     const image = new fabric.Image(movingImage, {
-      width: movingImage.naturalWidth,
-      height: movingImage.naturalHeight,
-      scaleX: 100 / movingImage.naturalWidth,
-      scaleY: 100 / movingImage.naturalHeight,
+      // width: movingImage.naturalWidth,
+      // height: movingImage.naturalHeight,
+      scaleX: Math.min(
+        100 / movingImage.naturalWidth,
+        200 / movingImage.naturalHeight
+      ),
+      scaleY: Math.min(
+        100 / movingImage.naturalWidth,
+        200 / movingImage.naturalHeight
+      ),
       top: offsetY - imgDragOffset.offsetY,
       left: offsetX - imgDragOffset.offsetX,
     });

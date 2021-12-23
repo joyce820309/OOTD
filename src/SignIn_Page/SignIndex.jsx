@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-// import ReactDOM from "react-dom";
 import styled from "styled-components";
 import "../Style/SignIn.css";
 import WebFont from "webfontloader";

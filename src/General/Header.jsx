@@ -81,18 +81,6 @@ const CircleDiv = styled.div`
   z-index: 50;
 `;
 
-// const NewsDiv = styled.div`
-//   position: absolute;
-//   bottom: -60px;
-//   right: 30px;
-//   width: 300px;
-//   min-height: 50px;
-//   max-height: 150px;
-//   padding: 8px;
-//   background-color: #31342d5c;
-//   border-radius: 5px;
-// `;
-
 const NavLink = styled(Link)`
   color: #815e29;
   text-decoration: none;
