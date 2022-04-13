@@ -311,7 +311,6 @@ const ClosetTitleDiv = styled.div`
   color: #515d6087;
   padding: 8px 12px 8px 10px;
   transform: rotate(-2.3deg);
-  cursor: pointer;
   z-index: 10;
   background-color: #94c5d1bd;
 `;

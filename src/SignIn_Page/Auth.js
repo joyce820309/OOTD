@@ -9,6 +9,8 @@ const Auth = (provider) => {
       return res.user;
     })
     .catch((err) => {
+      console.log('hihi')
+      console.error()
       return err;
     });
 };

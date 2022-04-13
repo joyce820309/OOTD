@@ -41,7 +41,7 @@ const App = () => {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      setIsUser(user);
+      // setIsUser(user);
       dispatch(getIsUser(user));
       if (user) {
         setIsUser(user);
