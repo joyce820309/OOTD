@@ -143,7 +143,6 @@ const Detail = styled.div`
 const Button = styled.div`
   background-color: #a9dbe596;
   text-align: center;
-  line-height: 1.6rem;
   color: #31342d5c;
   cursor: pointer;
   border-radius: 5px;
@@ -152,7 +151,6 @@ const Button = styled.div`
   font-size: 1rem;
   font-weight: 600;
   &:hover {
-    transform: scale(1.2) !important;
     background-color: #ffdd759e;
   }
   @media screen and (max-width: 350px) {

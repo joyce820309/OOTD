@@ -311,16 +311,21 @@ function IndexPage() {
   AOS.init();
   const history = useHistory();
   const [isUser, setIsUser] = useState(null);
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
   const [toggleClassName, setClassName] = useState("container");
 
   useEffect(() => {
+    let unsubscribe
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        console.log(isUser)
         setIsUser(user);
       }
     });
-  }, []);
+    return () => {
+      unsubscribe && unsubscribe()
+    }
+  }, [isUser]);
 
   const signOut = () => {
     firebase
@@ -328,7 +333,8 @@ function IndexPage() {
       .signOut()
       .then(() => {
         history.push("/");
-        setIsUser(null);
+        // setIsUser(null);
+        // 改成 dispatch
       });
   };
 

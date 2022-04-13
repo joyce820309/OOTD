@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route, useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import Pic from "../img/Pic.png";
-import firebase from "../utils/firebase";
-import { useSelector } from "react-redux";
-import Expense from "./Expense";
-import MyCloset from "./Closet";
-import Exchange from "./Exchange";
-import NotFound from "../General/NotFound";
-import { EmptyContainer } from "../Style/PersonalCSS";
+import React, { useEffect, useState } from 'react';
+import { Switch, Route, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Pic from '../img/Pic.png';
+import firebase from '../utils/firebase';
+import { useSelector } from 'react-redux';
+import Expense from './Expense';
+import MyCloset from './Closet';
+import Exchange from './Exchange';
+import NotFound from '../General/NotFound';
+import { EmptyContainer } from '../Style/PersonalCSS';
 
 const BigDiv = styled.div`
   display: flex;
@@ -45,51 +45,48 @@ const Title = styled(Link)`
   padding: 10px 12px 12px 5px;
   transform: rotate(-1.8deg);
   cursor: pointer;
-  z-index: ${(props) => (props.click === "closetDiv" ? 10 : 0)};
-  background-color: ${(props) =>
-    props.click === "closetDiv" ? "#a5c2c9" : "#a5c2c999"};
+  z-index: ${(props) => (props.click === 'closetDiv' ? 10 : 0)};
+  background-color: ${(props) => (props.click === 'closetDiv' ? '#a5c2c9' : '#a5c2c999')};
   &:hover {
     transform: scale(1.16);
   }
-    @media screen and (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     font-size: 0.7rem;
     top: -52px;
   }
-    @media screen and (max-width: 365px) {
+  @media screen and (max-width: 365px) {
     left: -20px;
   }
 `;
 
 const Title1 = styled(Title)`
   left: 86px;
-  background-color: ${(props) =>
-  props.click === "exchangeDiv" ? "#edc4b4" : "#edc4b4a1"};
+  background-color: ${(props) => (props.click === 'exchangeDiv' ? '#edc4b4' : '#edc4b4a1')};
   color: #31342d5c;
   z-index: 0;
   padding: 10px 12px 18px 12px;
   top: -65px;
   transform: rotate(-1.2deg);
-  z-index: ${(props) => (props.click === "exchangeDiv" ? 10 : 0)};
+  z-index: ${(props) => (props.click === 'exchangeDiv' ? 10 : 0)};
   @media screen and (max-width: 768px) {
     top: -59px;
     left: 69px;
   }
-   @media screen and (max-width: 365px) {
+  @media screen and (max-width: 365px) {
     left: 39px;
   }
 `;
 
 const Title2 = styled(Title)`
   left: 208px;
-  background-color: ${(props) =>
-    props.click === "expenseDiv" ? "#ebc382" : "#dfb16687"};
-  z-index: ${(props) => (props.click === "expenseDiv" ? 10 : 0)};
+  background-color: ${(props) => (props.click === 'expenseDiv' ? '#ebc382' : '#dfb16687')};
+  z-index: ${(props) => (props.click === 'expenseDiv' ? 10 : 0)};
   color: #72674c9c;
   transform: rotate(1.8deg);
-    @media screen and (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     left: 161px;
   }
-     @media screen and (max-width: 365px) {
+  @media screen and (max-width: 365px) {
     left: 130px;
   }
 `;
@@ -106,10 +103,9 @@ const ProfileDiv = styled.div`
     justify-content: space-around;
     padding: 15px;
   }
-    @media screen and (max-width: 365px) {
+  @media screen and (max-width: 365px) {
     width: 100%;
-        justify-content: space-between;
-
+    justify-content: space-between;
   }
 `;
 
@@ -154,17 +150,17 @@ const UserInfo = styled.div`
 
 const Personal = () => {
   const isUser = useSelector((state) => state.user);
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUseremail] = useState("");
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUseremail] = useState('');
   const history = useHistory();
-  const [btnStatus, setBtnStatus] = useState("closetDiv");
+  const [btnStatus, setBtnStatus] = useState('closetDiv');
 
   useEffect(() => {
     let isMounted = true;
     if (isUser !== null) {
       firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(isUser.email)
         .get()
         .then((doc) => {
@@ -184,7 +180,7 @@ const Personal = () => {
       .auth()
       .signOut()
       .then(() => {
-        history.push("/");
+        history.push('/');
       });
   };
 
@@ -193,13 +189,9 @@ const Personal = () => {
       <BigDiv>
         <ProfileDiv>
           <ProfileImg>
-            <img
-              src={Pic}
-              alt="pic"
-              style={{ width: "100%", height: "100%" }}
-            />
+            <img src={Pic} alt="pic" style={{ width: '100%', height: '100%' }} />
           </ProfileImg>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <UserInfo>Hi, {userName}</UserInfo>
             <UserInfo>{userEmail}</UserInfo>
             <Button onClick={() => signOut()}>Log Out</Button>
@@ -210,7 +202,7 @@ const Personal = () => {
           <Title
             to="/Personal/mycloset"
             onClick={() => {
-              setBtnStatus("closetDiv");
+              setBtnStatus('closetDiv');
             }}
           >
             我的衣櫥
@@ -218,7 +210,7 @@ const Personal = () => {
           <Title1
             to="/Personal/myexchange"
             onClick={() => {
-              setBtnStatus("exchangeDiv");
+              setBtnStatus('exchangeDiv');
             }}
           >
             交換過的衣服
@@ -226,7 +218,7 @@ const Personal = () => {
           <Title2
             to="/Personal/myexpense"
             onClick={() => {
-              setBtnStatus("expenseDiv");
+              setBtnStatus('expenseDiv');
             }}
           >
             相關費用

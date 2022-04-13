@@ -34,9 +34,9 @@ const PopupAddItem = (
   setPrice,
   selectDate,
   setSelectDate,
-  imgFile,
+  imgFile, 
   date,
-  summitItem
+  summitItem 
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const isUser = useSelector((state) => state.user);

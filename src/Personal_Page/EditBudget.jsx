@@ -116,13 +116,13 @@ const EditBudget = () => {
     if (isUser !== null) {
       firebase
         .firestore()
-        .collection("users")
+        .collection("users") 
         .doc(isUser.email)
         .get()
         .then((doc) => {
           if (isMounted) {
             setBudget(doc.data().budget);
-            setRemain(doc.data().remaining);
+            // setRemain(doc.data().remaining);
           }
         });
     }
@@ -155,15 +155,19 @@ const EditBudget = () => {
             totalExp += doc.itemExpense;
           });
 
+          let rest = budget - totalExp
+
           setExpense(totalExp);
+          setRemain(rest)
           setIsLoading(false);
         });
     }
     return () => {
       unsuscribe && unsuscribe();
     };
-  }, [isUser]);
+  }, [isUser, expense, budget, remain]);
 
+ 
   const calculate = () => {
     const remainMoney = calaulateExp(budget, expense);
     setRemain(remainMoney);
@@ -174,7 +178,6 @@ const EditBudget = () => {
       .update(
         {
           budget: Number(budget),
-          remaining: Number(remainMoney),
         },
         { merge: true }
       )

@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Popup from "reactjs-popup";
-import Loading from "../General/Loading";
-import "firebase/firestore";
-import Swal from "sweetalert2";
-import { EmptyDiv } from "../Style/FittingCSS";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Popup from 'reactjs-popup';
+import Loading from '../General/Loading';
+import 'firebase/firestore';
+import Swal from 'sweetalert2';
+import { EmptyDiv } from '../Style/FittingCSS';
+import { useSelector } from 'react-redux';
 import {
   setIntoOutfitCollection,
   deleteDairyItem,
-} from "../utils/firebaseFunc";
+} from '../utils/firebaseFunc';
 
 const StyledPopup = styled(Popup)`
   &-overlay {
@@ -173,26 +173,26 @@ const Diary = () => {
 
   const Toast = Swal.mixin({
     toast: true,
-    position: "top",
+    position: 'top',
     showConfirmButton: false,
     timer: 2000,
     timerProgressBar: true,
     didOpen: (toast) => {
-      toast.addEventListener("mouseenter", Swal.stopTimer);
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
     },
   });
 
   return (
     <div
       style={{
-        margin: "110px auto",
-        height: "100%",
+        margin: '110px auto',
+        height: '100%',
       }}
     >
       {loading ? (
         <div
-          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
           <Loading />
         </div>
@@ -202,9 +202,9 @@ const Diary = () => {
             <EmptyContainer>
               <EmptyDiv
                 style={{
-                  padding: "13px",
-                  borderBottom: "0.6rem #bdc5c9 solid",
-                  fontSize: "1.6rem",
+                  padding: '13px',
+                  borderBottom: '0.6rem #bdc5c9 solid',
+                  fontSize: '1.6rem',
                 }}
               >
                 還沒有搭配過衣服唷！快前往更衣室穿搭吧！
@@ -229,7 +229,7 @@ const Diary = () => {
                         <Img
                           src={outfit.data.outfitImg}
                           alt="outfitImg"
-                          style={{ maxWidth: "100%", height: "100%" }}
+                          style={{ maxWidth: '100%', height: '100%' }}
                         />
                       </ImgBox>
                     }
@@ -241,23 +241,23 @@ const Diary = () => {
                             <img
                               src={outfit.data.outfitImg}
                               alt="outfitImg"
-                              style={{ maxWidth: "100%", maxHeight: "100%" }}
+                              style={{ maxWidth: '100%', maxHeight: '100%' }}
                             />
                           </ContentImg>
                           <div
                             style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "flex-start",
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'flex-start',
                             }}
                           >
                             <div
-                              style={{ display: "flex", marginBottom: "9px" }}
+                              style={{ display: 'flex', marginBottom: '9px' }}
                             >
                               <ContentTitle>穿搭主題：</ContentTitle>
                               <Content>{outfit.data.outfitName}</Content>
                             </div>
-                            <div style={{ display: "flex" }}>
+                            <div style={{ display: 'flex' }}>
                               <ContentTitle>穿搭季節：</ContentTitle>
                               <Content>{outfit.data.outfitSeason}</Content>
                             </div>
